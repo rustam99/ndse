@@ -1,7 +1,7 @@
 {
   "name": "homework",
   "version": "1.0.0",
-  "description": "Написать утилиту получения текущей даты и времени с богатым интерфейсом.",
+  "description": "",
   "main": "index.js",
   "bin": {
     "cdate": "index.js"
