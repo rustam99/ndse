@@ -1,0 +1,22 @@
+{
+  "name": "homework",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "gnum": "index.js"
+  },
+  "scripts": {
+    "run": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rustam99/ndse.git"
+  },
+  "author": "Рустам Гилязев",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rustam99/ndse/issues"
+  },
+  "homepage": "https://github.com/rustam99/ndse#readme"
+}
