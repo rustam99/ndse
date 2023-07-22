@@ -1,0 +1,25 @@
+{
+  "name": "homework",
+  "version": "1.0.0",
+  "description": "Написать утилиту получения текущей даты и времени с богатым интерфейсом.",
+  "main": "index.js",
+  "bin": {
+    "cdate": "index.js"
+  },
+  "scripts": {
+    "run": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rustam99/ndse.git"
+  },
+  "author": "Рустам Гилязев",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rustam99/ndse/issues"
+  },
+  "homepage": "https://github.com/rustam99/ndse#readme",
+  "dependencies": {
+    "yargs": "^17.7.2"
+  }
+}
