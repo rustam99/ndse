@@ -1,0 +1,23 @@
+{
+  "name": "hw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "run": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rustam99/ndse.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rustam99/ndse/issues"
+  },
+  "homepage": "https://github.com/rustam99/ndse#readme",
+  "devDependencies": {
+    "dotenv": "^16.3.1"
+  }
+}
