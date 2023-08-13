@@ -1,10 +1,10 @@
 import { v4 as uuid } from 'uuid';
 import { access, constants, mkdir, rm } from 'fs'
 import { join } from "path";
-import { rootPath } from "../utils/root.js";
-import { config } from "../config.js";
-
-const books = [];
+import { rootPath } from '../../utils/root.js';
+import { returnNotFound } from '../../utils/returnNotFound.js';
+import { config } from '../../config.js';
+import { books, editBook, addBook, removeBook } from '../../store/index.js';
 
 const checkAndCreateUploadDir = () => {
     access(join(rootPath, config.UPLOAD), constants.R_OK, (error) => {
@@ -46,11 +46,6 @@ const createBook = (body) => {
         fileName: book.fileName ?? '',
         fileBook: book.fileName ?? '',
     }
-}
-
-const returnNotFound = (response) => {
-    response.status(404);
-    response.json('Not found');
 }
 
 const findBookIndex = (request) => {
@@ -95,7 +90,7 @@ const create = (request, response) => {
 
     saveFileToBook(request, book);
 
-    books.push(book);
+    addBook(book)
 
     response.status(201);
     response.json(book);
@@ -107,7 +102,7 @@ const edit = (request, response) => {
     if (index < 0) return returnNotFound(response);
     const protectedBook = getProtectedBook(request.body);
 
-    books[index] = { ...books[index], ...protectedBook };
+    editBook(index, { ...books[index], ...protectedBook });
 
     saveFileToBook(request, books[index]);
 
@@ -120,7 +115,7 @@ const remove = (request, response) => {
 
     if (index < 0) return returnNotFound(response);
 
-    books.splice(index, 1);
+    removeBook(index);
 
     response.status(200);
     response.json('ok');
@@ -133,8 +128,7 @@ const download = (request, response) => {
 
     access(books[index].fileBook, constants.R_OK, (err) => {
         if (err) {
-            books[index].fileBook = '';
-            books[index].fileName = '';
+            editBook(index, { ...books[index], fileBook: '', fileName: '' });
 
             return returnNotFound(response);
         }

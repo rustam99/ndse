@@ -1,0 +1,40 @@
+<%- include('components/head', { title: title }); %>
+    <div class="container">
+        <div class="row align-items-center gx-5" style="max-width: 400px">
+            <h1 class="col">Книги</h1>
+            <div class="col">
+                <a href="/create/" class="btn btn-primary">Добавить книгу</a>
+            </div>
+        </div>
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Заголовок</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            <% for (let index in books) { %>
+                <tr class="js-removeItem">
+                    <th scope="row"><%= +index + 1; %></th>
+                    <td><%= books[index].title %></td>
+                    <td class="text-end">
+                        <a class="btn btn-sm btn-success" href="/view/<%= books[index].id %>">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                        </a>
+                        <a class="btn btn-sm btn-primary" href="/update/<%= books[index].id %>">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </a>
+                        <form class="d-inline js-removeBook" data-id="<%= books[index].id %>">
+                            <button class="btn btn-sm btn-danger" type="submit">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            <% } %>
+            </tbody>
+        </table>
+    </div>
+<%- include('components/foot'); %>

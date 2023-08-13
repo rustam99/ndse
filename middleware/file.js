@@ -5,7 +5,7 @@ const storage = multer.diskStorage({
        cb(null, 'upload/')
    },
     filename(req, file, cb) {
-       cb(null, `${Date.now()}-${file.originalname}`)
+       cb(null, `${Date.now()}-${Buffer.from(file.originalname, 'latin1').toString('utf8')}`)
     },
 });
 

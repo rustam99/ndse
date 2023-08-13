@@ -1,0 +1,30 @@
+<form class="needs-validation js-form" novalidate>
+    <div class="mb-3">
+        <label for="title" class="form-label">Заголовок</label>
+        <input type="text" class="form-control" id="title" name="title" value="<%= book.title %>" required>
+        <div class="invalid-feedback">Пожалуйста заполните заголовок</div>
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Описание</label>
+        <textarea class="form-control" id="description" name="description" rows="3" style="resize: none;" required><%= book.description %></textarea>
+        <div class="invalid-feedback">Пожалуйста заполните Описание</div>
+    </div>
+    <div class="mb-3">
+        <label for="authors" class="form-label">Авторы</label>
+        <input type="text" class="form-control" id="authors" name="authors" value="<%= book.authors %>" required>
+        <div class="invalid-feedback">Пожалуйста заполните Авторов</div>
+    </div>
+    <div class="mb-3">
+        <label for="fileCover" class="form-label">Обложка</label>
+        <input type="text" class="form-control" id="fileCover" name="fileCover" value="<%= book.fileCover %>">
+    </div>
+    <div class="mb-3">
+        <label for="file" class="form-label">Файл книги</label>
+        <input class="form-control" type="file" id="file" name="fileBook">
+    </div>
+    <div class="mb-3 form-check">
+        <input class="form-check-input" type="checkbox" id="favorite" name="favorite" <%= book.favorite ? 'checked' : '' %>>
+        <label class="form-check-label" for="favorite">Избранное</label>
+    </div>
+    <button type="submit" class="btn btn-primary"><%= buttonText %></button>
+</form>

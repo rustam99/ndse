@@ -1,0 +1,27 @@
+<%- include('components/head', { title: title }); %>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-2"><%= book.title %></h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">Авторы: <%= book.authors %></h6>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">Обложка: <%= book.fileCover %></h6>
+                    <% if (book.fileName) { %>
+                        <p class="card-text">Имя файла: <%= book.fileName %></p>
+                    <% } %>
+                    <p class="card-text"><%= book.description %></p>
+                    <a class="btn btn-sm btn-primary" href="/update/<%= book.id %>">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                    </a>
+                    <form class="d-inline js-removeBook" data-id="<%= book.id %>">
+                        <button class="btn btn-sm btn-danger" type="submit">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('components/foot'); %>
