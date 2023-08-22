@@ -1,0 +1,62 @@
+-------------------------------1------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker pull node:18.17.1
+18.17.1: Pulling from library/node
+de4cac68b616: Pull complete
+d31b0195ec5f: Pull complete
+9b1fd34c30b7: Pull complete
+c485c4ba3831: Pull complete
+baa4bfd9abd8: Pull complete
+02b9cfe54335: Pull complete
+333351eaa9c6: Pull complete
+466ffc744f41: Pull complete
+Digest: sha256:11e9c297fc51f6f65f7d0c7c8a8581e5721f2f16de43ceff1a199fd3ef609f95
+Status: Downloaded newer image for node:18.17.1
+docker.io/library/node:18.17.1
+
+What's Next?
+  View summary of image vulnerabilities and recommendations → docker scout quickview node:18.17.1
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology>
+
+-------------------------------2------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker run --name mynode -it -e NAME="Рустам" -e SURNAME="Гилязев" node
+Unable to find image 'node:latest' locally
+latest: Pulling from library/node
+de4cac68b616: Already exists
+d31b0195ec5f: Already exists
+9b1fd34c30b7: Already exists
+c485c4ba3831: Already exists
+baa4bfd9abd8: Already exists
+52298f70c327: Pull complete
+894d11d0caa4: Pull complete
+660df1278554: Pull complete
+Digest: sha256:8d9887b3b05d2e65598a18616c37cfc271346d12248dfcbeadd7b7bf4da1e827
+Status: Downloaded newer image for node:latest
+Welcome to Node.js v20.5.1.
+Type ".help" for more information.
+>
+
+-------------------------------3------------------------------------
+
+> console.log(`Привет, ${process.env.NAME} ${process.env.SURNAME}!`)
+Привет, Рустам Гилязев!
+undefined
+>
+
+-------------------------------4------------------------------------
+
+>
+(To exit, press Ctrl+C again or Ctrl+D or type .exit)
+>
+
+-------------------------------5------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker rmi node:18.17.1
+Untagged: node:18.17.1
+Untagged: node@sha256:11e9c297fc51f6f65f7d0c7c8a8581e5721f2f16de43ceff1a199fd3ef609f95
+Deleted: sha256:95d8a703ee8c152260f1598ace93b052dc14a22b0dc721dc32ad326aeee40614      
+Deleted: sha256:a48ef3103fb5ee7268698d3995089c0a965181408268f35df64eb7eff415b946      
+Deleted: sha256:e4f9625fd92bbefcd1bac6d5b54de40be86ef52f0420b10749e388be96d985e4      
+Deleted: sha256:1e9b538d0b6b02f79c8aaeda719e786d17ec4816b42087296ac299805634e882      
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> 

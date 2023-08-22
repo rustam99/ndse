@@ -1,0 +1,70 @@
+-------------------------------1------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker pull node:lts
+lts: Pulling from library/node
+de4cac68b616: Pull complete
+d31b0195ec5f: Pull complete
+9b1fd34c30b7: Pull complete
+c485c4ba3831: Pull complete
+baa4bfd9abd8: Pull complete
+02b9cfe54335: Pull complete
+333351eaa9c6: Pull complete
+466ffc744f41: Pull complete
+Digest: sha256:11e9c297fc51f6f65f7d0c7c8a8581e5721f2f16de43ceff1a199fd3ef609f95
+Status: Downloaded newer image for node:lts
+docker.io/library/node:lts
+
+What's Next?
+  View summary of image vulnerabilities and recommendations → docker scout quickview node:lts
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology>
+
+-------------------------------2------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker run --name first_note -d -v ${pwd}\data:/var/first/data node /bin/sleep infinity
+9ff394c440e70eb2b63eebfe6a8886bd2211c41a2da248a57354b2fee21a591
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> 
+
+-------------------------------3------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker run --name second_note -d -v ${pwd}\data:/var/second/data node /bin/sleep infinity
+a565a563887f12007c833c717acc0f69b3055ca770d15929daf6a3469c18153f
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> 
+
+-------------------------------4------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker exec first_note touch /var/first/data/file.txt 
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> 
+
+-------------------------------5------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker exec second_note ls /var/second/data
+file.txt     
+host_file.txt
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology
+
+-------------------------------6------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker kill first_note
+first_note  
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker kill second_note
+second_note  
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology
+
+-------------------------------7------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker rm first_note second_note
+first_note
+second_note
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> 
+
+-------------------------------8------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker rmi node:lts
+Untagged: node:lts
+Untagged: node@sha256:11e9c297fc51f6f65f7d0c7c8a8581e5721f2f16de43ceff1a199fd3ef609f95
+Deleted: sha256:95d8a703ee8c152260f1598ace93b052dc14a22b0dc721dc32ad326aeee40614      
+Deleted: sha256:a48ef3103fb5ee7268698d3995089c0a965181408268f35df64eb7eff415b946      
+Deleted: sha256:e4f9625fd92bbefcd1bac6d5b54de40be86ef52f0420b10749e388be96d985e4      
+Deleted: sha256:1e9b538d0b6b02f79c8aaeda719e786d17ec4816b42087296ac299805634e882      
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> 

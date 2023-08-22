@@ -1,0 +1,138 @@
+-------------------------------1------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker pull busybox
+Using default tag: latest
+latest: Pulling from library/busybox
+3f4d90098f5b: Pull complete
+Digest: sha256:3fbc632167424a6d997e74f52b878d7cc478225cffac6bc977eedfe51c7f4e79
+Status: Downloaded newer image for busybox:latest
+docker.io/library/busybox:latest
+
+What's Next?
+  View summary of image vulnerabilities and recommendations → docker scout quickview busybox
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology>
+
+-------------------------------2------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker run --name pinger -it busybox ping netology.ru -c 7
+PING netology.ru (172.67.21.207): 56 data bytes
+64 bytes from 172.67.21.207: seq=0 ttl=62 time=26.629 ms
+64 bytes from 172.67.21.207: seq=1 ttl=62 time=25.630 ms
+64 bytes from 172.67.21.207: seq=2 ttl=62 time=29.330 ms
+64 bytes from 172.67.21.207: seq=3 ttl=62 time=28.979 ms
+64 bytes from 172.67.21.207: seq=4 ttl=62 time=29.116 ms
+64 bytes from 172.67.21.207: seq=5 ttl=62 time=25.207 ms
+64 bytes from 172.67.21.207: seq=6 ttl=62 time=29.553 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 25.207/27.777/29.553 ms
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology>
+
+-------------------------------3------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker ps -a
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS                      PORTS     NAMES
+30742fb6d7e8   busybox   "ping netology.ru -c…"   58 seconds ago   Exited (0) 51 seconds ago             pinger
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology>
+
+-------------------------------4------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker logs pinger
+PING netology.ru (172.67.21.207): 56 data bytes
+64 bytes from 172.67.21.207: seq=0 ttl=62 time=26.629 ms
+64 bytes from 172.67.21.207: seq=1 ttl=62 time=25.630 ms
+64 bytes from 172.67.21.207: seq=2 ttl=62 time=29.330 ms
+64 bytes from 172.67.21.207: seq=3 ttl=62 time=28.979 ms
+64 bytes from 172.67.21.207: seq=4 ttl=62 time=29.116 ms
+64 bytes from 172.67.21.207: seq=5 ttl=62 time=25.207 ms
+64 bytes from 172.67.21.207: seq=6 ttl=62 time=29.553 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 25.207/27.777/29.553 ms
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology>
+
+-------------------------------5------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker start pinger
+pinger
+
+-------------------------------6------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker ps -a
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS     NAMES 
+30742fb6d7e8   busybox   "ping netology.ru -c…"   5 minutes ago   Up 6 seconds             pinger
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology>
+
+-------------------------------7------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker logs pinger
+PING netology.ru (172.67.21.207): 56 data bytes
+64 bytes from 172.67.21.207: seq=0 ttl=62 time=26.629 ms 
+64 bytes from 172.67.21.207: seq=1 ttl=62 time=25.630 ms 
+64 bytes from 172.67.21.207: seq=2 ttl=62 time=29.330 ms 
+64 bytes from 172.67.21.207: seq=3 ttl=62 time=28.979 ms 
+64 bytes from 172.67.21.207: seq=4 ttl=62 time=29.116 ms 
+64 bytes from 172.67.21.207: seq=5 ttl=62 time=25.207 ms 
+64 bytes from 172.67.21.207: seq=6 ttl=62 time=29.553 ms 
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 25.207/27.777/29.553 ms
+PING netology.ru (104.22.41.171): 56 data bytes
+64 bytes from 104.22.41.171: seq=0 ttl=62 time=26.305 ms 
+64 bytes from 104.22.41.171: seq=1 ttl=62 time=25.925 ms 
+64 bytes from 104.22.41.171: seq=2 ttl=62 time=25.553 ms
+64 bytes from 104.22.41.171: seq=3 ttl=62 time=26.559 ms
+64 bytes from 104.22.41.171: seq=4 ttl=62 time=25.569 ms
+64 bytes from 104.22.41.171: seq=5 ttl=62 time=28.584 ms
+64 bytes from 104.22.41.171: seq=6 ttl=62 time=26.517 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 25.553/26.430/28.584 ms
+PING netology.ru (104.22.41.171): 56 data bytes
+64 bytes from 104.22.41.171: seq=0 ttl=62 time=25.559 ms
+64 bytes from 104.22.41.171: seq=1 ttl=62 time=27.366 ms
+64 bytes from 104.22.41.171: seq=2 ttl=62 time=25.387 ms
+64 bytes from 104.22.41.171: seq=3 ttl=62 time=25.649 ms
+64 bytes from 104.22.41.171: seq=4 ttl=62 time=30.831 ms
+64 bytes from 104.22.41.171: seq=5 ttl=62 time=25.793 ms
+64 bytes from 104.22.41.171: seq=6 ttl=62 time=25.672 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 25.387/26.608/30.831 ms
+PING netology.ru (104.22.41.171): 56 data bytes
+64 bytes from 104.22.41.171: seq=0 ttl=62 time=26.660 ms
+64 bytes from 104.22.41.171: seq=1 ttl=62 time=26.484 ms
+64 bytes from 104.22.41.171: seq=2 ttl=62 time=27.211 ms
+64 bytes from 104.22.41.171: seq=3 ttl=62 time=27.295 ms
+64 bytes from 104.22.41.171: seq=4 ttl=62 time=31.634 ms
+64 bytes from 104.22.41.171: seq=5 ttl=62 time=26.388 ms
+64 bytes from 104.22.41.171: seq=6 ttl=62 time=26.444 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 26.388/27.445/31.634 ms
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> 
+
+-------------------------------8------------------------------------
+
+4 раз ping, 4*7 = 28
+
+-------------------------------9------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker rm pinger
+pinger
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> 
+
+-------------------------------10------------------------------------
+
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> docker rmi busybox
+Untagged: busybox:latest
+Untagged: busybox@sha256:3fbc632167424a6d997e74f52b878d7cc478225cffac6bc977eedfe51c7f4e79
+Deleted: sha256:a416a98b71e224a31ee99cff8e16063554498227d2b696152a9c3e0aa65e5824
+Deleted: sha256:3d24ee258efc3bfe4066a1a9fb83febf6dc0b1548dfe896161533668281c9f4f
+PS C:\Users\rusta\OneDrive\Рабочий стол\netology> 
