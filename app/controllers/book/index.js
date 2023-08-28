@@ -5,6 +5,7 @@ import { rootPath } from '../../utils/root.js';
 import { returnNotFound } from '../../utils/returnNotFound.js';
 import { config } from '../../config.js';
 import { books, editBook, addBook, removeBook } from '../../store/index.js';
+import fetch from 'node-fetch';
 
 const checkAndCreateUploadDir = () => {
     access(join(rootPath, config.UPLOAD), constants.R_OK, (error) => {
@@ -45,6 +46,7 @@ const createBook = (body) => {
         fileCover: book.fileCover ?? '',
         fileName: book.fileName ?? '',
         fileBook: book.fileName ?? '',
+        counter: 0
     }
 }
 
@@ -81,8 +83,21 @@ const getById = (request, response) => {
 
     if (index < 0) return returnNotFound(response);
 
-    response.status(200);
-    response.json(books[index]);
+    fetch(`${config.COUNTER_URL}/counter/${request.params.id}/incr`, {
+        method: 'POST',
+    })
+        .then(r => r.json())
+        .then((counter) => {
+            editBook(index, {...books[index], counter });
+
+            response.status(200);
+            response.json(books[index]);
+        })
+        .catch(() => {
+            // cant incr counter
+            response.status(200);
+            response.json(books[index]);
+        });
 }
 
 const create = (request, response) => {
