@@ -1,10 +1,36 @@
-## Домашние задания "NDSE Гилязев Рустам"
-
-1. [«1.2 Аргументы командной строки и console»](https://github.com/rustam99/ndse/tree/hw-1.2-1)
-2. [«1.4. Потоки. Модули: path, fs»](https://github.com/rustam99/ndse/tree/hw-1.4)
-3. [«1.5. Http module. Переменные окружения»](https://github.com/rustam99/ndse/tree/hw-1.5)
-4. [«2.1. Express»](https://github.com/rustam99/ndse/tree/hw-2.1)
-5. [«2.2. Middleware. Паттерн "цепочка обязанностей»](https://github.com/rustam99/ndse/tree/hw-2.2)
-6. [«2.3. EJS. Шаблонизаторы»](https://github.com/rustam99/ndse/tree/hw-2.3)
-7. [«2.4 Docker, установка и настройка»](https://github.com/rustam99/ndse/tree/hw-2.4)
-8. [«2.5. Docker: контейнеризация приложения»](https://github.com/rustam99/ndse/tree/hw-2.5)
+1. **Запрос(ы) для вставки данных минимум о двух книгах в коллекцию books**
+```js
+db.books.insertMany([
+    {
+        title: "Книга 1",
+        description: "Описание 1",
+        authors: "author 1, author 2",
+    },
+    {
+        title: "Книга 2",
+        description: "Описание 2",
+        authors: "author 3, author 4",
+    },
+    {
+        title: "Книга 3",
+        description: "Описание 3",
+        authors: "author 5, author 6",
+    },
+])
+```
+2. **Запрос для поиска полей документов коллекции books по полю title**
+```js
+db.books.find({ title: 'Книга 2' })
+```
+3. **Запрос для редактирования полей: description и authors коллекции books по _id записи**
+```js
+db.books.updateOne(
+    { _id: '8dsadsd1a2d4a5s4d12zx4sd' },
+    {
+        $set: {
+            description: 'Обновленая книга',
+            authors: 'author 5, author 6, author 7',
+        }
+    },
+)
+```
