@@ -9,4 +9,4 @@
 7. [«2.4 Docker, установка и настройка»](https://github.com/rustam99/ndse/tree/hw-2.4)
 8. [«2.5. Docker: контейнеризация приложения»](https://github.com/rustam99/ndse/tree/hw-2.5)
 9. [«2.6. База данных и хранение данных»](https://github.com/rustam99/ndse/tree/hw-2.6)
-9. [«2.7. Подключение MongoDB в Node.js приложение»](https://github.com/rustam99/ndse/tree/hw-2.7)
+10. [«2.7. Подключение MongoDB в Node.js приложение»](https://github.com/rustam99/ndse/tree/hw-2.7)
