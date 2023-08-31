@@ -74,7 +74,7 @@ const create = async (request, response) => {
     }
 
     try {
-        const newBook = await bookModel.create(request.body);
+        const newBook = await bookModel.create(book);
 
         response.status(201);
         response.json(newBook);
