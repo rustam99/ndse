@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import { config } from './config.js';
 import { useRouter } from './router/index.js';
 import { notFound } from './middleware/notFound.js';
@@ -14,4 +15,11 @@ useRouter(app);
 
 app.use(notFound);
 
-app.listen(config.PORT, () => `server start on port ${config.PORT}`);
+(async function () {
+    try {
+        await mongoose.connect(config.MONGO_URL);
+        app.listen(config.PORT, () => `server start on port ${config.PORT}`);
+    } catch (e) {
+        console.log(e);
+    }
+})();

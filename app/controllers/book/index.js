@@ -1,11 +1,10 @@
-import { v4 as uuid } from 'uuid';
 import { access, constants, mkdir, rm } from 'fs'
 import { join } from "path";
 import { rootPath } from '../../utils/root.js';
 import { returnNotFound } from '../../utils/returnNotFound.js';
 import { config } from '../../config.js';
-import { books, editBook, addBook, removeBook } from '../../store/index.js';
-import fetch from 'node-fetch';
+import { bookModel } from '../../models/book.js';
+import mongoose from 'mongoose';
 
 const checkAndCreateUploadDir = () => {
     access(join(rootPath, config.UPLOAD), constants.R_OK, (error) => {
@@ -19,138 +18,146 @@ const checkAndCreateUploadDir = () => {
 
 checkAndCreateUploadDir();
 
-const getProtectedBook = (body) => {
-    const { title, description, authors, favorite, fileCover, fileName, fileBook } = body;
-    const book = {};
+const getAndUpdateFileUpload = (request, fileBook = null) => {
+    if (!request.file) return null;
 
-    if (title) book.title = title;
-    if (description) book.description = description;
-    if (authors) book.authors = authors;
-    if (favorite) book.favorite = favorite;
-    if (fileCover) book.fileCover = fileCover;
-    if (fileName) book.fileName = fileName;
-    if (fileBook) book.fileBook = fileBook;
+    const { path, filename } = request.file;
 
-    return book;
+    if (fileBook) {
+        deleteFileBook(fileBook);
+    }
+
+    return { fileName: filename, fileBook: path }
 }
 
-const createBook = (body) => {
-    const book = getProtectedBook(body);
+const deleteFileBook = (fileBook) => {
+    rm(fileBook, (err) => {
+        if (err) console.log('Не удалось удалить предыдущий файл, возможно был уже удален');
+    });
+}
 
-    return {
-        id: uuid(),
-        title: book.title ?? '',
-        description: book.description ?? '',
-        authors: book.authors ?? '',
-        favorite: !!book.favorite,
-        fileCover: book.fileCover ?? '',
-        fileName: book.fileName ?? '',
-        fileBook: book.fileName ?? '',
-        counter: 0
+const getAll = async (request, response) => {
+    try {
+        const books = await bookModel.find().exec();
+
+        response.json(books);
+    } catch (e) {
+        response.status(500);
+        response.json(e);
     }
 }
 
-const findBookIndex = (request) => {
+const getById = async (request, response) => {
+    try {
+        const { id } = request.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) return returnNotFound(response);
+
+        const book = await bookModel.findById(id).exec();
+
+        if (!book) return returnNotFound(response);
+
+        response.json(book);
+    } catch (e) {
+        return response.status(500).json(e);
+    }
+}
+
+const create = async (request, response) => {
+    const book = request.body
+
+    const fileData = getAndUpdateFileUpload(request);
+
+    if (fileData) {
+        book.fileName = fileData.fileName;
+        book.fileBook = fileData.fileBook;
+    }
+
+    try {
+        const newBook = await bookModel.create(request.body);
+
+        response.status(201);
+        response.json(newBook);
+    } catch (e) {
+        response.status(500);
+        response.json(e);
+    }
+}
+
+const edit = async (request, response) => {
     const { id } = request.params;
 
-    return books.findIndex((book) => book.id === id);
-}
+    if (!mongoose.Types.ObjectId.isValid(id)) return returnNotFound(response);
 
-const saveFileToBook = (request, book) => {
-    if (request.file) {
-        const { path, filename } = request.file;
+    try {
+        const book = await bookModel.findById(id).exec();
 
-        if (book.fileBook) {
-            rm(book.fileBook, (err) => {
-                if (err) console.log('Не удалось удалить предыдущий файл, возможно был уже удален');
-            });
+        if (!book) return returnNotFound(response);
+
+        for (const key in request.body) {
+            if (key in book) book[key] = request.body[key];
         }
 
-        book.fileName = filename;
-        book.fileBook = path;
+        const fileData = getAndUpdateFileUpload(request, book.fileBook);
+
+        if (fileData) {
+            book.fileBook = fileData.fileBook;
+            book.fileName = fileData.fileName;
+        }
+
+        book.save();
+
+        response.json(book);
+    } catch (e) {
+        response.status(500).json(e);
     }
-
-    return book;
 }
 
-const getAll = (request, response) => {
-    response.status(200);
-    response.json(books);
-}
+const remove = async (request, response) => {
+    const { id } = request.params;
 
-const getById = (request, response) => {
-    const index = findBookIndex(request);
+    if (!mongoose.Types.ObjectId.isValid(id)) return returnNotFound(response);
 
-    if (index < 0) return returnNotFound(response);
+    try {
+        const deletedBook = await bookModel.findByIdAndDelete(id).exec();
 
-    fetch(`${config.COUNTER_URL}/counter/${request.params.id}/incr`, {
-        method: 'POST',
-    })
-        .then(r => r.json())
-        .then((counter) => {
-            editBook(index, {...books[index], counter });
+        if (!deletedBook) return returnNotFound(response);
 
-            response.status(200);
-            response.json(books[index]);
-        })
-        .catch(() => {
-            // cant incr counter
-            response.status(200);
-            response.json(books[index]);
-        });
-}
-
-const create = (request, response) => {
-    const book = createBook(request.body);
-
-    saveFileToBook(request, book);
-
-    addBook(book)
-
-    response.status(201);
-    response.json(book);
-}
-
-const edit = (request, response) => {
-    const index = findBookIndex(request);
-
-    if (index < 0) return returnNotFound(response);
-    const protectedBook = getProtectedBook(request.body);
-
-    editBook(index, { ...books[index], ...protectedBook });
-
-    saveFileToBook(request, books[index]);
-
-    response.status(200);
-    response.json(books[index]);
-}
-
-const remove = (request, response) => {
-    const index = findBookIndex(request);
-
-    if (index < 0) return returnNotFound(response);
-
-    removeBook(index);
-
-    response.status(200);
-    response.json('ok');
-}
-
-const download = (request, response) => {
-    const index = findBookIndex(request);
-
-    if (index < 0) return returnNotFound(response);
-
-    access(books[index].fileBook, constants.R_OK, (err) => {
-        if (err) {
-            editBook(index, { ...books[index], fileBook: '', fileName: '' });
-
-            return returnNotFound(response);
+        if (deletedBook.fileBook) {
+            deleteFileBook(deletedBook.fileBook);
         }
 
-        response.status(200);
-        response.download(books[index].fileBook);
-    });
+        return response.json({ status: 'ok' });
+    } catch (e) {
+        return response.status(500).json(e);
+    }
+}
+
+const download = async (request, response) => {
+    const { id } = request.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) return returnNotFound(response);
+
+    try {
+        const book = await bookModel.findById(id).exec();
+
+        if (!book) return returnNotFound(response);
+
+        if (!book.fileBook) return response.status(200).json({ status: false, message: 'Файл не был прикреплен' });
+
+        response.download(book.fileBook, book.fileBook, (err) => {
+            if (err) {
+                book.fileBook = '';
+                book.fileName = '';
+
+                book.save();
+
+                return response.status(409).json({ status: false, message: 'Файл не был найден' });
+            }
+        });
+    } catch (e) {
+        return response.status(500).json(e);
+    }
 }
 
 export { getAll, getById, create, edit, remove, download }

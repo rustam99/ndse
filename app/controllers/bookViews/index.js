@@ -1,22 +1,41 @@
-import { books, getIndexById } from '../../store/index.js';
+import { bookModel } from '../../models/book.js';
+import mongoose from 'mongoose';
 
-const index = (request, response) => {
+const index = async (request, response) => {
+    let books = [];
+
+    try {
+        books = await bookModel.find().exec();
+    } catch (e) {
+        console.log(e);
+    }
+
     response.render('../views/index.ejs', {
         title: 'Библиотека',
         books: books,
     });
 }
 
-const view = (request, response) => {
+const view = async (request, response) => {
     const { id } = request.params;
-    const index = getIndexById(id);
 
-    if (index < 0) response.redirect('/404');
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        response.redirect('/404');
+    }
 
-    response.render('../views/view.ejs', {
-        title: books[index].title,
-        book: books[index],
-    });
+    try {
+        const book = await bookModel.findById(id).exec();
+
+        if (!book) return response.redirect('/404');
+
+        response.render('../views/view.ejs', {
+            title: book.title,
+            book: book,
+        });
+    } catch (e) {
+        console.log(e);
+        response.redirect('/404');
+    }
 }
 
 const create = (request, response) => {
@@ -26,16 +45,24 @@ const create = (request, response) => {
     });
 }
 
-const update = (request, response) => {
+const update = async (request, response) => {
     const { id } = request.params;
-    const index = getIndexById(id);
 
-    if (index < 0) response.redirect('/404');
+    if (!mongoose.Types.ObjectId.isValid(id)) return response.redirect('/404');
 
-    response.render('../views/update.ejs', {
-        title: 'Редактировать',
-        book: books[index],
-    });
+    try {
+        const book = await bookModel.findById(id);
+
+        if (!id) return response.redirect('/404');
+
+        response.render('../views/update.ejs', {
+            title: 'Редактировать',
+            book: book,
+        });
+    } catch (e) {
+        console.log(e);
+        response.redirect('/404');
+    }
 }
 
 export { index, view, create, update }

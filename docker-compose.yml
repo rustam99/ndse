@@ -1,20 +1,12 @@
 services:
-  storage:
-    image: redis
-    volumes:
-      - ./data:/data
-  counter:
-    image: rustam99/counter:1.0.0
-    working_dir: /counter
-    ports:
-      - 3001:3001
+  mongoDb:
+    image: mongo
+    restart: always
     environment:
-      - PORT=3001
-      - REDIS_URL=redis://storage
-    depends_on:
-      - storage
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
   app:
-    image: rustam99/library:1.0.0
+    image: rustam99/library:2.0.0
     working_dir: /app
     volumes:
       - ./app/upload:/app/upload
@@ -23,6 +15,6 @@ services:
     environment:
       - PORT=3000
       - UPLOAD=upload
-      - COUNTER_URL=http://counter:3001
+      - MONGO_URL=mongodb://root:example@mongoDb:27017/
     depends_on:
-      - counter
+      - mongoDb

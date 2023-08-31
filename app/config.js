@@ -1,6 +1,6 @@
 export const config = {
     PORT: process.env.PORT ?? '3000',
-    COUNTER_URL: process.env.COUNTER_URL,
+    MONGO_URL: process.env.MONGO_URL,
     UPLOAD: process.env.UPLOAD ?? 'upload',
 }
 
