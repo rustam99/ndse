@@ -13,6 +13,7 @@ const index = async (request, response) => {
     response.render('../views/index.ejs', {
         title: 'Библиотека',
         books: books,
+        isAuth: request.isAuthenticated(),
     });
 }
 
@@ -28,9 +29,10 @@ const view = async (request, response) => {
 
         if (!book) return response.redirect('/404');
 
-        response.render('../views/view.ejs', {
+        response.render('../views/books/view.ejs', {
             title: book.title,
             book: book,
+            isAuth: request.isAuthenticated(),
         });
     } catch (e) {
         console.log(e);
@@ -39,9 +41,10 @@ const view = async (request, response) => {
 }
 
 const create = (request, response) => {
-    response.render('../views/create.ejs', {
+    response.render('../views/books/create.ejs', {
         title: 'Добавить',
         book: {},
+        isAuth: request.isAuthenticated(),
     });
 }
 
@@ -55,9 +58,10 @@ const update = async (request, response) => {
 
         if (!id) return response.redirect('/404');
 
-        response.render('../views/update.ejs', {
+        response.render('../views/books/update.ejs', {
             title: 'Редактировать',
             book: book,
+            isAuth: request.isAuthenticated(),
         });
     } catch (e) {
         console.log(e);

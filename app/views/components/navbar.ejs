@@ -4,6 +4,21 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav"></div>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <% if (isAuth) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user/me/">Профиль</a>
+                    </li>
+                <% } %>
+                <li class="nav-item">
+                    <% if (isAuth) { %>
+                        <button class="btn btn-link js-logout">Выйти</button>
+                    <% } else { %>
+                        <a class="nav-link" href="/user/login/">Логин</a>
+                    <% } %>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>

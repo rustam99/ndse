@@ -1,0 +1,54 @@
+<%- include('../components/head', { title: title, isAuth: isAuth }); %>
+
+<div class="container">
+    <nav class="mb-3">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-login-tab" data-bs-toggle="tab" data-bs-target="#nav-login" type="button" role="tab" aria-controls="nav-login" aria-selected="true">Войти</button>
+            <button class="nav-link" id="nav-signup-tab" data-bs-toggle="tab" data-bs-target="#nav-signup" type="button" role="tab" aria-controls="nav-signup" aria-selected="false">Зарегистрироваться</button>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-login" role="tabpanel" aria-labelledby="nav-login-tab" tabindex="0">
+            <form class="needs-validation js-auth js-login" novalidate>
+                <div class="mb-3">
+                    <label for="login" class="form-label">Логин</label>
+                    <input type="text" class="form-control" id="login" name="login" required>
+                    <div class="invalid-feedback">Пожалуйста заполните имя пользователя</div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                    <div class="invalid-feedback">Пожалуйста заполните Пароль</div>
+                </div>
+                <button type="submit" class="btn btn-primary">Войти</button>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="nav-signup" role="tabpanel" aria-labelledby="nav-signup-tab" tabindex="0">
+            <form class="needs-validation js-auth js-signup" novalidate>
+                <div class="mb-3">
+                    <label for="login" class="form-label">Логин</label>
+                    <input type="text" class="form-control" id="login" name="login" required>
+                    <div class="invalid-feedback">Пожалуйста заполните Логин</div>
+                </div>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Имя пользователя</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                    <div class="invalid-feedback">Пожалуйста заполните имя пользователя</div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                    <div class="invalid-feedback">Пожалуйста заполните Пароль</div>
+                </div>
+                <div class="mb-3">
+                    <label for="passwordRetry" class="form-label">Повторите пароль</label>
+                    <input type="password" class="form-control" id="passwordRetry" name="passwordRetry" required>
+                    <div class="invalid-feedback">Пожалуйста заполните Пароль</div>
+                </div>
+                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- include('../components/foot'); %>

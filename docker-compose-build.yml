@@ -27,5 +27,6 @@ services:
       - PORT=3000
       - UPLOAD=upload
       - MONGO_URL=mongodb://root:example@mongoDb:27017/
+      - SESSION_SECRET=sF{oyHX[rcM||6x{$
     depends_on:
       - mongoDb

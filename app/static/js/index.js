@@ -72,4 +72,78 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
     })();
+
+    // Login, Signup
+    (function () {
+        document.body.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const target = e.target;
+
+            if (!(target instanceof HTMLFormElement) && !target.classList.contains('.js-auth')) return
+
+            const data = new FormData(target);
+
+            if (target.classList.contains('js-signup')) {
+                fetch('/api/user/signup', {
+                    method: 'POST',
+                    headers: {
+                      'Content-type': 'application/json',
+                    },
+                    body: JSON.stringify(Object.fromEntries(data)),
+                })
+                    .then(r => r.json())
+                    .then((res) => {
+                        if (res?.message?.name === 'UserExistsError') {
+                            return alert('Пользователь с таким именем уже зарегистрирован');
+                        }
+
+                        document.location.href = '/';
+                    })
+                    .catch((res) => {
+                        console.log(res);
+                    });
+            } else if (target.classList.contains('js-login')) {
+                fetch('/api/user/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                    body: JSON.stringify(Object.fromEntries(data)),
+                })
+                    .then(res => {
+                        if (res.status === 401) {
+                            alert('Не верный логин или пароль');
+                        } else {
+                            document.location.href = '/';
+                        }
+                    })
+                    .catch((res) => {
+                        console.log(res);
+                    });
+            }
+        });
+    })();
+
+    // Logout
+    (function () {
+        document.body.addEventListener('click', (e) => {
+           const target = e.target;
+
+           if (!target?.classList?.contains('js-logout')) return;
+
+           fetch('/api/user/logout', {
+               method: 'POST',
+           })
+               .then(res => {
+                   if (res.status === 200) {
+                       return res.json();
+                   }
+               })
+               .then(res => {
+                   document.location.href = '/';
+               })
+               .catch(console.log);
+        });
+    })();
 });
