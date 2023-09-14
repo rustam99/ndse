@@ -1,7 +1,16 @@
 import { Schema, model } from 'mongoose';
-import passportLocalMongoose from 'passport-local-mongoose';
 
 const userSchema = new Schema({
+    login: {
+        type: String,
+        unique: true
+    },
+    password: {
+        type: String,
+    },
+    salt: {
+        type: String,
+    },
     displayName: {
         type: String,
     },
@@ -9,11 +18,6 @@ const userSchema = new Schema({
         type: Number,
         select: false,
     },
-});
-
-userSchema.plugin(passportLocalMongoose, {
-    hashField: 'password',
-    usernameField: 'login',
 });
 
 export const userModel = model('User', userSchema);

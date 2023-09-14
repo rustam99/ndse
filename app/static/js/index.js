@@ -94,7 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                     .then(r => r.json())
                     .then((res) => {
-                        if (res?.message?.name === 'UserExistsError') {
+                        console.log(res);
+
+                        if (res?.message === 'UserExistsError') {
                             return alert('Пользователь с таким именем уже зарегистрирован');
                         }
 

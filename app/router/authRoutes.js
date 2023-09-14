@@ -1,10 +1,29 @@
 import passport from 'passport';
-import { userModel } from '../models/user.js';
+import passportLocal from 'passport-local';
+import { verify } from '../controllers/auth/verify.js';
 import { login, signup, logout } from '../controllers/auth/index.js'
 
-passport.use(userModel.createStrategy())
-passport.serializeUser(userModel.serializeUser());
-passport.deserializeUser(userModel.deserializeUser());
+const LocalStrategy = passportLocal.Strategy;
+
+passport.use(new LocalStrategy({
+    usernameField: 'login',
+}, verify));
+
+passport.serializeUser(function(user, cb) {
+    process.nextTick(function() {
+        return cb(null, {
+            id: user.id,
+            login: user.login,
+            displayName: user.displayName,
+        });
+    });
+});
+
+passport.deserializeUser(function(user, cb) {
+    process.nextTick(function() {
+        return cb(null, user);
+    });
+});
 
 export const authRoutes = (app) => {
     app.post('/api/user/login', login);
