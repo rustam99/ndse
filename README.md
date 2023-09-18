@@ -11,4 +11,4 @@
 9. [«2.6. База данных и хранение данных»](https://github.com/rustam99/ndse/tree/hw-2.6)
 10. [«2.7. Подключение MongoDB в Node.js приложение»](https://github.com/rustam99/ndse/tree/hw-2.7)
 11. [«2.8. 2.8 Аутентификация. Passport.js»](https://github.com/rustam99/ndse/tree/hw-2.8)
-12[«2.9. Realtime-взаимодействие с сервером, протокол websocket»](https://github.com/rustam99/ndse/tree/hw-2.9)
+12. [«2.9. Realtime-взаимодействие с сервером, протокол websocket»](https://github.com/rustam99/ndse/tree/hw-2.9)
