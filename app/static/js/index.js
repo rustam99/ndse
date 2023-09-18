@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = form.dataset.id;
 
         form.addEventListener('submit', (e) => {
-           e.preventDefault();
+            e.preventDefault();
 
             fetch(`${apiEndpoint}${id}`, {
                 method: 'DELETE',
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 fetch('/api/user/signup', {
                     method: 'POST',
                     headers: {
-                      'Content-type': 'application/json',
+                        'Content-type': 'application/json',
                     },
                     body: JSON.stringify(Object.fromEntries(data)),
                 })
@@ -130,22 +130,70 @@ document.addEventListener('DOMContentLoaded', () => {
     // Logout
     (function () {
         document.body.addEventListener('click', (e) => {
-           const target = e.target;
+            const target = e.target;
 
-           if (!target?.classList?.contains('js-logout')) return;
+            if (!target?.classList?.contains('js-logout')) return;
 
-           fetch('/api/user/logout', {
-               method: 'POST',
-           })
-               .then(res => {
-                   if (res.status === 200) {
-                       return res.json();
-                   }
-               })
-               .then(res => {
-                   document.location.href = '/';
-               })
-               .catch(console.log);
+            fetch('/api/user/logout', {
+                method: 'POST',
+            })
+                .then(res => {
+                    if (res.status === 200) {
+                        return res.json();
+                    }
+                })
+                .then(res => {
+                    document.location.href = '/';
+                })
+                .catch(console.log);
         });
+    })();
+
+    // Comments
+    (function () {
+        if (!document.querySelector('.js-view') || typeof io === 'undefined') return;
+
+        const socket = io.connect('/');
+
+        document.body.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            if (!e.target?.classList.contains('js-sendComments')) return;
+
+            const value = document.querySelector('#comment').value.trim();
+
+            if (value.length < 1) return;
+
+            socket.emit('add-comment', {
+                comment: value,
+                bookId: location.pathname.split('/')[2],
+            }, {}, (response) => {
+                if (!response.status) {
+                    alert('Не удалось отправить комментарий, повторит попытку');
+                } else {
+                    document.querySelector('#comment').value = '';
+                }
+            });
+        });
+
+        socket.on('new-comment', ({ displayName, date, comment }) => {
+            if (!displayName || !date || !comment) return;
+
+            const template = commentTemplateString(displayName, date, comment);
+
+            document
+                .querySelector('.js-comments')
+                .insertAdjacentHTML('beforeend', template);
+        });
+
+        function commentTemplateString(displayName, date, comment) {
+            return `<div class="toast show mb-3" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="me-auto">${displayName}</strong>
+                            <small>${new Intl.DateTimeFormat('ru').format(new Date(date))}</small>
+                        </div>
+                        <div class="toast-body">${comment}</div>
+                    </div>`;
+        }
     })();
 });

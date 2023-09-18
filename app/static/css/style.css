@@ -22,3 +22,13 @@ body {
 .content {
     flex: 1;
 }
+
+.comments {
+    max-width: 380px;
+    max-height: 800px;
+    overflow: auto;
+}
+
+.comments .toast {
+    box-shadow: none;
+}

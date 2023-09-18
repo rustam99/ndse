@@ -6,7 +6,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=example
   app:
-    image: rustam99/library:3.0.0
+    image: rustam99/library:4.0.0
     working_dir: /app
     volumes:
       - ./app/upload:/app/upload

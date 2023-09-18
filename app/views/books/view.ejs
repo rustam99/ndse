@@ -1,8 +1,9 @@
 <%- include('../components/head', { title: title, isAuth: isAuth }); %>
-<div class="container">
-    <div class="row">
-        <div class="col-sm-8">
-            <div class="card">
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+<div class="container js-view">
+    <div class="row mb-3">
+        <div class="col">
+            <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title mb-2"><%= book.title %></h5>
                     <h6 class="card-subtitle mb-2 text-body-secondary">Авторы: <%= book.authors %></h6>
@@ -20,6 +21,28 @@
                         </button>
                     </form>
                 </div>
+            </div>
+            <% if (isAuth) { %>
+                <form class="js-sendComments">
+                    <div class="mb-3">
+                        <label for="comment" class="form-label">Введите комментарий</label>
+                        <textarea class="form-control" id="comment" rows="3" name="comment"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                </form>
+            <% } %>
+        </div>
+        <div class="col">
+            <div data-bs-spy="scroll" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" class="comments rounded-2 js-comments" tabindex="0">
+                <% for (const comment of comments) { %>
+                    <div class="toast show mb-3" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="me-auto"><%= comment.user[0].displayName %></strong>
+                            <small><%= new Intl.DateTimeFormat('ru').format(new Date(comment.date)) %></small>
+                        </div>
+                        <div class="toast-body"><%= comment.comment %></div>
+                    </div>
+                <% } %>
             </div>
         </div>
     </div>

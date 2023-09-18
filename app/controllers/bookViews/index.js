@@ -1,4 +1,5 @@
 import { bookModel } from '../../models/book.js';
+import { bookCommentsModel } from '../../models/bookComments.js';
 import mongoose from 'mongoose';
 
 const index = async (request, response) => {
@@ -29,10 +30,16 @@ const view = async (request, response) => {
 
         if (!book) return response.redirect('/404');
 
+        const comments = await bookCommentsModel.find({ book: book.id, }).populate({
+            path: 'user',
+            select: '-password -salt',
+        }).exec();
+
         response.render('../views/books/view.ejs', {
             title: book.title,
             book: book,
             isAuth: request.isAuthenticated(),
+            comments: comments,
         });
     } catch (e) {
         console.log(e);
@@ -54,7 +61,7 @@ const update = async (request, response) => {
     if (!mongoose.Types.ObjectId.isValid(id)) return response.redirect('/404');
 
     try {
-        const book = await bookModel.findById(id);
+        const book = await bookModel.findById(id).exec();
 
         if (!id) return response.redirect('/404');
 
