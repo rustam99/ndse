@@ -1,0 +1,35 @@
+services:
+  mongoDb:
+    image: mongo
+    container_name: 'mongo'
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+  mongoDbAdmin:
+    image: mongo-express
+    container_name: 'mongoAdmin'
+    restart: always
+    ports:
+      - '8081:8081'
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_USERNAME}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_PASSWORD}
+      - ME_CONFIG_MONGODB_URL=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongoDb:${MONGO_PORT}
+    depends_on:
+      - mongoDb
+  app:
+    image: node:18.17.1-alpine
+    container_name: 'App'
+    working_dir: /app
+    volumes:
+      - ./app/:/app/
+    ports:
+      - "${HTTP_PORT}:${HTTP_PORT}"
+    environment:
+      - PORT=${HTTP_PORT}
+      - MONGO_URL=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongoDb:${MONGO_PORT}
+      - SESSION_SECRET=${SESSION_SECRET}
+    depends_on:
+      - mongoDb
+    command: npm run dev
