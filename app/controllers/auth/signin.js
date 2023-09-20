@@ -3,7 +3,9 @@ import passport from 'passport'
 export const signin = (request, response, next) => {
   passport.authenticate('local', {}, (error, user, info) => {
     if (error) {
-      return response.status(500).json({ status: 'error', error })
+      return response
+        .status(500)
+        .json({ status: 'error', error: error?.message })
     }
 
     if (info?.message) {
@@ -12,14 +14,18 @@ export const signin = (request, response, next) => {
 
     request.login(user, (error) => {
       if (error) {
-        return response.status(500).json({ status: 'error', error })
+        return response
+          .status(500)
+          .json({ status: 'error', error: error?.message })
       }
 
       const prevSession = request.session
 
       request.session.regenerate((error) => {
         if (error) {
-          return response.status(500).json({ status: 'error', error })
+          return response
+            .status(500)
+            .json({ status: 'error', error: error?.message })
         }
 
         Object.assign(request.session, prevSession)

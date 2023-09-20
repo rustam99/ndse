@@ -1,6 +1,6 @@
 import passport from 'passport'
 import passportLocal from 'passport-local'
-import { UserModule } from '../services/auth/index.js'
+import { UserModule } from '../services/UserModule/index.js'
 import { AuthController } from '../controllers/auth/index.js'
 
 const LocalStrategy = passportLocal.Strategy

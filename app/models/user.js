@@ -21,6 +21,10 @@ const userSchema = new Schema({
   contactPhone: {
     type: String,
   },
+  __v: {
+    type: Number,
+    select: false,
+  },
 })
 
 export const userModel = model('User', userSchema)
