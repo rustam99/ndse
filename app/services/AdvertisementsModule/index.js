@@ -1,15 +1,22 @@
 import { advertisementModel } from '../../models/advertisement.js'
+import mongoose from 'mongoose'
 
 export const AdvertisementsModule = {
   find: async (params) => {
     try {
+      if (mongoose.Types.ObjectId.isValid(params)) {
+        return advertisementModel.findOne({
+          user: params,
+          $and: [{ isDeleted: false }],
+        })
+      }
+
       return advertisementModel
         .find({
           $or: [
-            { shortText: new RegExp(params) },
-            { description: new RegExp(params) },
-            { userId: params },
-            { tags: { $all: [params] } },
+            { shortText: { $regex: new RegExp(params, 'i') } },
+            { description: { $regex: new RegExp(params, 'i') } },
+            { tags: { $in: Array.isArray(params) ? params : [params] } },
           ],
           $and: [{ isDeleted: false }],
         })

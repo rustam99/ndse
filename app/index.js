@@ -7,7 +7,7 @@ import mongoose from 'mongoose'
 import passport from 'passport'
 
 import { config } from './config.js'
-import { router } from './router/index.js'
+import { router, socketRouter } from './router/index.js'
 
 const app = express()
 const httpServer = createServer(app)
@@ -34,7 +34,7 @@ router(app)
     io.use((socket, next) => {
       sessionMiddleware(socket.request, {}, next)
     }).on('connection', (socket) => {
-      console.log('SOCKET')
+      socketRouter(socket)
     })
 
     httpServer.listen(

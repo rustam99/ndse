@@ -24,6 +24,7 @@ const advertisementSchema = new Schema({
   updatedAt: {
     type: Date,
     required: true,
+    default: Date.now,
   },
   tags: {
     type: [String],

@@ -1,31 +1,26 @@
 import passport from 'passport'
+import { responseErrors } from '../../utils/responseErrors.js'
 
 export const signin = (request, response, next) => {
   passport.authenticate('local', {}, (error, user, info) => {
     if (error) {
-      return response
-        .status(500)
-        .json({ status: 'error', error: error?.message })
+      return responseErrors.internal(response, error?.message)
     }
 
     if (info?.message) {
-      return response.status(401).json({ status: 'error', error: info.message })
+      return responseErrors.unauthorized(response, info.message)
     }
 
     request.login(user, (error) => {
       if (error) {
-        return response
-          .status(500)
-          .json({ status: 'error', error: error?.message })
+        return responseErrors.internal(response, error?.message)
       }
 
       const prevSession = request.session
 
       request.session.regenerate((error) => {
         if (error) {
-          return response
-            .status(500)
-            .json({ status: 'error', error: error?.message })
+          return responseErrors.internal(response, error?.message)
         }
 
         Object.assign(request.session, prevSession)

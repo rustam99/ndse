@@ -1,13 +1,11 @@
 import { UserModule } from '../../services/UserModule/index.js'
+import { responseErrors } from '../../utils/responseErrors.js'
 
 export const signup = async (request, response) => {
   UserModule.create(request.body)
     .then((user) => {
       if (user instanceof Error) {
-        return response.status(400).json({
-          error: user.message,
-          status: 'error',
-        })
+        return responseErrors.badRequest(response, user.message)
       }
 
       return response.json({
@@ -16,6 +14,6 @@ export const signup = async (request, response) => {
       })
     })
     .catch((error) => {
-      return response.status(500).json({ status: 'error', error })
+      return responseErrors.internal(response, error)
     })
 }

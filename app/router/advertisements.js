@@ -11,7 +11,12 @@ export const advertisementsRoutes = (app) => {
     upload.any('images'),
     AdvertisementsController.add,
   )
-  app.put('/api/advertisements/:id', needAuth, () => '')
+  app.put(
+    '/api/advertisements/:id',
+    needAuth,
+    upload.any('images'),
+    AdvertisementsController.edit,
+  )
   app.delete(
     '/api/advertisements/:id',
     needAuth,
