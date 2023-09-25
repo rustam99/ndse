@@ -3,9 +3,12 @@ services:
     image: mongo
     container_name: 'mongo'
     restart: always
+    command: mongod --port ${MONGO_PORT}
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    ports:
+      - "${MONGO_PORT}:${MONGO_PORT}"
   mongoDbAdmin:
     image: mongo-express
     container_name: 'mongoAdmin'
