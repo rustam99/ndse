@@ -33,8 +33,6 @@ export const AdvertisementsModule = {
     images = [],
     tags = [],
     isDeleted = false,
-    createdAt = Date.now(),
-    updatedAt = Date.now(),
   }) => {
     try {
       if (!shortText) {
@@ -52,8 +50,6 @@ export const AdvertisementsModule = {
         images,
         tags,
         isDeleted,
-        createdAt,
-        updatedAt,
       })
     } catch (error) {
       console.log(error)

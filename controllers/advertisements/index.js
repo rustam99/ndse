@@ -93,8 +93,6 @@ export const AdvertisementsController = {
         }
       }
 
-      advertisements.updatedAt = Date.now()
-
       const result = await advertisements.save()
 
       return response.json({ status: 'ok', data: result })

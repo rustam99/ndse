@@ -1,5 +1,6 @@
 import { chatModel } from '../../models/chat.js'
 import { messageModel } from '../../models/message.js'
+import { userModel } from '../../models/user.js'
 import mongoose from 'mongoose'
 import { SendMessageEvent } from '../../events/sendMessageEvent.js'
 import { eventBus } from '../../utils/eventBus.js'
@@ -36,12 +37,24 @@ export const ChatModule = {
         return new Error('Не верный формат receiver')
       }
 
+      const chat = await ChatModule.find([author, receiver])
+
+      if (!chat) {
+        const isReceiverExist = await userModel
+          .exists({
+            _id: receiver,
+          })
+          .exec()
+
+        if (!isReceiverExist) {
+          return new Error('Receiver не был найден')
+        }
+      }
+
       const createdMessage = await messageModel.create({
         author,
         text,
       })
-
-      const chat = await ChatModule.find([author, receiver])
 
       if (!chat) {
         const createdChat = await chatModel.create({

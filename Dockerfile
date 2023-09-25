@@ -4,10 +4,10 @@ WORKDIR /app
 
 ARG NODE_ENV=production
 
-COPY ./app/package*.json ./
+COPY ./package*.json ./
 
 RUN npm install
 
-COPY ./app/* .
+COPY . .
 
 CMD ["npm", "run", "start"]
