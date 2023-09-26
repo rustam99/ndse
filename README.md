@@ -12,3 +12,4 @@
 10. [«2.7. Подключение MongoDB в Node.js приложение»](https://github.com/rustam99/ndse/tree/hw-2.7)
 11. [«2.8. 2.8 Аутентификация. Passport.js»](https://github.com/rustam99/ndse/tree/hw-2.8)
 12. [«2.9. Realtime-взаимодействие с сервером, протокол websocket»](https://github.com/rustam99/ndse/tree/hw-2.9)
+13. [Курсовой проект «NDSE: настройка окружения и Express.js»](https://github.com/rustam99/ndse/tree/course-1)
