@@ -3,6 +3,18 @@ import { advertisementModel } from '../../models/advertisement.js'
 import { AdvertisementsModule } from '../../services/AdvertisementsModule/index.js'
 import { responseErrors } from '../../utils/responseErrors.js'
 import { removeFiles } from '../../utils/removeFiles.js'
+import { mkdir, access, constants } from 'fs'
+import * as path from 'path'
+
+access(path.join(process.cwd(), 'uploads'), constants.R_OK, (err) => {
+  if (!err) return
+
+  mkdir(path.join(process.cwd(), 'uploads'), (error) => {
+    if (error) {
+      console.log(error)
+    }
+  })
+})
 
 export const AdvertisementsController = {
   all: async (request, response) => {
@@ -41,8 +53,8 @@ export const AdvertisementsController = {
   },
   add: async (request, response) => {
     try {
-      const { shortText, userId, description, tags } = request.body
-      const data = { shortText, userId }
+      const { shortText, description, tags } = request.body
+      const data = { shortText, userId: request.user.id }
 
       if (description) data.description = description
       if (tags) data.tags = tags

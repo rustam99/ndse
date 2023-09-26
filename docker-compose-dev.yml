@@ -26,7 +26,7 @@ services:
     container_name: 'App'
     working_dir: /app
     volumes:
-      - ./app/:/app/
+      - ./:/app/
     ports:
       - "${HTTP_PORT}:${HTTP_PORT}"
     environment:
