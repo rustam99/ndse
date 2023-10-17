@@ -1,5 +1,6 @@
 ## Домашние задания "NDSE Гилязев Рустам"
 
+### Первый модлуь
 1. [«1.2 Аргументы командной строки и console»](https://github.com/rustam99/ndse/tree/hw-1.2-1)
 2. [«1.4. Потоки. Модули: path, fs»](https://github.com/rustam99/ndse/tree/hw-1.4)
 3. [«1.5. Http module. Переменные окружения»](https://github.com/rustam99/ndse/tree/hw-1.5)
@@ -13,3 +14,6 @@
 11. [«2.8. 2.8 Аутентификация. Passport.js»](https://github.com/rustam99/ndse/tree/hw-2.8)
 12. [«2.9. Realtime-взаимодействие с сервером, протокол websocket»](https://github.com/rustam99/ndse/tree/hw-2.9)
 13. [Курсовой проект «NDSE: настройка окружения и Express.js»](https://github.com/rustam99/ndse/tree/course-1)
+
+### Второй модуль
+1. [«1.2. Система типов TypeScript. Принципы ООП. SOLID»](https://github.com/rustam99/ndse/tree/hw-3.0)
