@@ -1,7 +1,8 @@
-import { auth } from '../controllers/auth.js';
-import { getAll, getById, create, edit, remove } from '../controllers/book.js';
+import { auth } from '../controllers/auth';
+import { getAll, getById, create, edit, remove } from '../controllers/book';
+import { Express } from 'express'
 
-const useRouter = (app) => {
+const useRouter = (app: Express) => {
     app.post('/api/user/login', auth);
     app.get('/api/books', getAll);
     app.get('/api/books/:id', getById);
