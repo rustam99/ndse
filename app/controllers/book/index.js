@@ -3,8 +3,10 @@ import { join } from "path";
 import { rootPath } from '../../utils/root.js';
 import { returnNotFound } from '../../utils/returnNotFound.js';
 import { config } from '../../config.js';
-import { bookModel } from '../../models/book.js';
-import mongoose from 'mongoose';
+import { container } from '../../container.js'
+import { BookRepository } from '../../serveices/BooksRepository.js'
+
+const service = container.get(BookRepository);
 
 const checkAndCreateUploadDir = () => {
     access(join(rootPath, config.UPLOAD), constants.R_OK, (error) => {
@@ -38,7 +40,7 @@ const deleteFileBook = (fileBook) => {
 
 const getAll = async (request, response) => {
     try {
-        const books = await bookModel.find().exec();
+        const books = await service.getAll()
 
         response.json(books);
     } catch (e) {
@@ -51,9 +53,7 @@ const getById = async (request, response) => {
     try {
         const { id } = request.params;
 
-        if (!mongoose.Types.ObjectId.isValid(id)) return returnNotFound(response);
-
-        const book = await bookModel.findById(id).exec();
+        const book = await service.getOne(id)
 
         if (!book) return returnNotFound(response);
 
@@ -74,7 +74,7 @@ const create = async (request, response) => {
     }
 
     try {
-        const newBook = await bookModel.create(book);
+        const newBook = await service.create(book);
 
         response.status(201);
         response.json(newBook);
@@ -87,27 +87,26 @@ const create = async (request, response) => {
 const edit = async (request, response) => {
     const { id } = request.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) return returnNotFound(response);
-
     try {
-        const book = await bookModel.findById(id).exec();
+        const book = await service.getOne(id);
+        const data = {}
 
         if (!book) return returnNotFound(response);
 
         for (const key in request.body) {
-            if (key in book) book[key] = request.body[key];
+            data[key] = request.body[key];
         }
 
         const fileData = getAndUpdateFileUpload(request, book.fileBook);
 
         if (fileData) {
-            book.fileBook = fileData.fileBook;
-            book.fileName = fileData.fileName;
+            data.fileBook = fileData.fileBook;
+            data.fileName = fileData.fileName;
         }
 
-        book.save();
+        const saved = await service.edit(id, data);
 
-        response.json(book);
+        response.json(saved);
     } catch (e) {
         response.status(500).json(e);
     }
@@ -116,10 +115,8 @@ const edit = async (request, response) => {
 const remove = async (request, response) => {
     const { id } = request.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) return returnNotFound(response);
-
     try {
-        const deletedBook = await bookModel.findByIdAndDelete(id).exec();
+        const deletedBook = await service.remove(id);
 
         if (!deletedBook) return returnNotFound(response);
 
@@ -136,10 +133,8 @@ const remove = async (request, response) => {
 const download = async (request, response) => {
     const { id } = request.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) return returnNotFound(response);
-
     try {
-        const book = await bookModel.findById(id).exec();
+        const book = await service.getOne(id);
 
         if (!book) return returnNotFound(response);
 

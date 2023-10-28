@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import 'reflect-metadata'
 import { config } from './config.js';
 import { useRouter } from './router/index.js';
 import { notFound } from './middleware/notFound.js';
