@@ -17,3 +17,4 @@
 
 ### Второй модуль
 1. [«1.2. Система типов TypeScript. Принципы ООП. SOLID»](https://github.com/rustam99/ndse/tree/hw-3.0)
+2. [«1.3. IoС и DI. Библиотека reflect-metadata»](https://github.com/rustam99/ndse/tree/hw-3.1)
