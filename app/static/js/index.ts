@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const forms = document.querySelectorAll('.needs-validation');
 
     Array.from(forms).forEach(form => {
+        if (!(form instanceof HTMLFormElement)) return
+
         form.addEventListener('submit', event => {
             if (!form.checkValidity()) {
                 event.preventDefault();
@@ -20,14 +22,17 @@ document.addEventListener('DOMContentLoaded', () => {
         let method = '';
         let id = '';
 
-        if (!form) return;
+        if (!(form instanceof HTMLFormElement)) return;
+
         const formParent = form.parentElement;
+
+        if (!formParent) return
 
         if (formParent.classList.contains('js-createBook')) {
             method = 'POST';
         } else if (formParent.classList.contains('js-updateBook')) {
             method = 'PUT';
-            id = formParent.dataset.id;
+            id = formParent.dataset.id ?? '';
         }
 
         form.addEventListener('submit', (e) => {
@@ -52,9 +57,9 @@ document.addEventListener('DOMContentLoaded', () => {
     (function () {
         const form = document.querySelector('.js-removeBook');
 
-        if (!form) return;
+        if (!(form instanceof HTMLFormElement)) return;
 
-        const id = form.dataset.id;
+        const id = form.dataset.id ?? '';
 
         form.addEventListener('submit', (e) => {
            e.preventDefault();
@@ -66,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(() => {
                     const removeItem = form.closest('.js-removeItem');
 
-                    if (!removeItem) document.location.href = '/';
+                    if (!removeItem) return document.location.href = '/';
 
                     removeItem.remove();
                 });

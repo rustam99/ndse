@@ -1,17 +1,18 @@
 import { access, constants, mkdir, rm } from 'fs'
 import { join } from "path";
-import { rootPath } from '../../utils/root.js';
-import { returnNotFound } from '../../utils/returnNotFound.js';
-import { config } from '../../config.js';
-import { container } from '../../container.js'
-import { BookRepository } from '../../serveices/BooksRepository.js'
-
-const service = container.get(BookRepository);
+import { returnNotFound } from '../../utils/returnNotFound'
+import { config} from '../../config'
+import { container } from '../../container'
+import { BookRepositoryID } from '../../serveices/BooksRepository'
+import { Request, Response } from 'express'
+import { Book, IBook, ICreateBookDTO } from '../../types/Book'
+import { ParamsDictionary } from 'express-serve-static-core'
+const service = container.get<Book>(BookRepositoryID);
 
 const checkAndCreateUploadDir = () => {
-    access(join(rootPath, config.UPLOAD), constants.R_OK, (error) => {
+    access(join(process.cwd(), config.UPLOAD), constants.R_OK, (error) => {
         if (error) {
-            mkdir(join(rootPath, config.UPLOAD), (err) => {
+            mkdir(join(process.cwd(), config.UPLOAD), (err) => {
                 if (err) console.log(`Не удалось создать паку ${config.UPLOAD}`);
             });
         }
@@ -20,7 +21,7 @@ const checkAndCreateUploadDir = () => {
 
 checkAndCreateUploadDir();
 
-const getAndUpdateFileUpload = (request, fileBook = null) => {
+const getAndUpdateFileUpload = (request: Request, fileBook: string | null = null) => {
     if (!request.file) return null;
 
     const { path, filename } = request.file;
@@ -32,13 +33,13 @@ const getAndUpdateFileUpload = (request, fileBook = null) => {
     return { fileName: filename, fileBook: path }
 }
 
-const deleteFileBook = (fileBook) => {
+const deleteFileBook = (fileBook: string) => {
     rm(fileBook, (err) => {
         if (err) console.log('Не удалось удалить предыдущий файл, возможно был уже удален');
     });
 }
 
-const getAll = async (request, response) => {
+const getAll = async (request: Request, response: Response) => {
     try {
         const books = await service.getAll()
 
@@ -49,7 +50,7 @@ const getAll = async (request, response) => {
     }
 }
 
-const getById = async (request, response) => {
+const getById = async (request: Request, response: Response) => {
     try {
         const { id } = request.params;
 
@@ -63,7 +64,7 @@ const getById = async (request, response) => {
     }
 }
 
-const create = async (request, response) => {
+const create = async (request: Request<ParamsDictionary, any, ICreateBookDTO>, response: Response) => {
     const book = request.body
 
     const fileData = getAndUpdateFileUpload(request);
@@ -84,16 +85,17 @@ const create = async (request, response) => {
     }
 }
 
-const edit = async (request, response) => {
+const edit = async (request: Request<ParamsDictionary, any, Partial<Omit<IBook, 'id'>>>, response: Response) => {
     const { id } = request.params;
 
     try {
         const book = await service.getOne(id);
-        const data = {}
+        const data: Partial<Omit<IBook, 'id'>> = {}
 
         if (!book) return returnNotFound(response);
 
         for (const key in request.body) {
+            // @ts-ignore
             data[key] = request.body[key];
         }
 
@@ -112,7 +114,7 @@ const edit = async (request, response) => {
     }
 }
 
-const remove = async (request, response) => {
+const remove = async (request: Request, response: Response) => {
     const { id } = request.params;
 
     try {
@@ -130,7 +132,7 @@ const remove = async (request, response) => {
     }
 }
 
-const download = async (request, response) => {
+const download = async (request: Request, response: Response) => {
     const { id } = request.params;
 
     try {
@@ -142,10 +144,10 @@ const download = async (request, response) => {
 
         response.download(book.fileBook, book.fileBook, (err) => {
             if (err) {
-                book.fileBook = '';
-                book.fileName = '';
-
-                book.save();
+                service.edit(id, {
+                    fileBook: '',
+                    fileName: '',
+                })
 
                 return response.status(409).json({ status: false, message: 'Файл не был найден' });
             }

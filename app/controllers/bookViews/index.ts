@@ -1,11 +1,15 @@
-import { bookModel } from '../../models/book.js';
-import mongoose from 'mongoose';
+import { container } from '../../container'
+import { BookRepositoryID } from '../../serveices/BooksRepository'
+import { Book, IBook } from '../../types/Book'
+import { Request, Response } from 'express'
 
-const index = async (request, response) => {
-    let books = [];
+const service = container.get<Book>(BookRepositoryID)
+
+const index = async (request: Request, response: Response) => {
+    let books: IBook[] | never[] = [];
 
     try {
-        books = await bookModel.find().exec();
+        books = await service.getAll();
     } catch (e) {
         console.log(e);
     }
@@ -16,15 +20,11 @@ const index = async (request, response) => {
     });
 }
 
-const view = async (request, response) => {
+const view = async (request: Request, response: Response) => {
     const { id } = request.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        response.redirect('/404');
-    }
-
     try {
-        const book = await bookModel.findById(id).exec();
+        const book = await service.getOne(id)
 
         if (!book) return response.redirect('/404');
 
@@ -38,22 +38,20 @@ const view = async (request, response) => {
     }
 }
 
-const create = (request, response) => {
+const create = (request: Request, response: Response) => {
     response.render('../views/create.ejs', {
         title: 'Добавить',
         book: {},
     });
 }
 
-const update = async (request, response) => {
+const update = async (request: Request, response: Response) => {
     const { id } = request.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) return response.redirect('/404');
-
     try {
-        const book = await bookModel.findById(id);
+        const book = await service.getOne(id)
 
-        if (!id) return response.redirect('/404');
+        if (!book) return response.redirect('/404');
 
         response.render('../views/update.ejs', {
             title: 'Редактировать',

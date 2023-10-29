@@ -1,7 +1,8 @@
-import { create, download, edit, getAll, getById, remove } from '../controllers/book/index.js';
+import { Express } from 'express'
+import { create, download, edit, getAll, getById, remove } from '../controllers/book'
 import { upload } from '../middleware/file.js';
 
-export const booksRoutes = (app) => {
+export const booksRoutes = (app: Express) => {
     app.get('/api/books', getAll);
     app.get('/api/books/:id', getById);
     app.post('/api/books', upload.single('fileBook'), create);
