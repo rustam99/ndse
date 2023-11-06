@@ -1,11 +1,4 @@
-## Установка и запусе проекта
+## Запуск проекта
 
 ```bash
-# Установка
-$ npm install
-
-# Разработка
-$ npm run start:dev
-
-# Продакшн
-$ npm run start:prod
+$ docker-compose up

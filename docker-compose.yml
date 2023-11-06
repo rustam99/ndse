@@ -13,8 +13,6 @@ services:
     build: ./
     container_name: 'App'
     working_dir: /app
-    volumes:
-      - ./uploads:/app/uploads
     ports:
       - "${HTTP_PORT}:${HTTP_PORT}"
     environment:
