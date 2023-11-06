@@ -1,7 +1,9 @@
-import { Module } from '@nestjs/common';
-import { BooksModule } from './books/books.module';
+import { Module } from '@nestjs/common'
+import { MongooseModule } from '@nestjs/mongoose'
+import { BooksModule } from './books/books.module'
+import { config } from './config'
 
 @Module({
-  imports: [BooksModule],
+  imports: [MongooseModule.forRoot(config.MONGO_URL), BooksModule],
 })
 export class AppModule {}

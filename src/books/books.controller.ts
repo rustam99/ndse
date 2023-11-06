@@ -1,15 +1,7 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
-import { BooksService } from './books.service';
-import { ICreateBookDTO, IEditBookDTO } from './types';
-import { NotFoundException } from '../utils/Exceptions/NotFoundException';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
+import { BooksService } from './books.service'
+import { NotFoundException } from '../utils/Exceptions/NotFoundException'
+import { ICreateBookDTO, IUpdateBookDTO } from './interfaces/dto'
 
 @Controller('books')
 export class BooksController {
@@ -17,38 +9,38 @@ export class BooksController {
 
   @Get()
   getAll() {
-    return this.booksService.getAll();
+    return this.booksService.findAll()
   }
 
   @Get(':id')
-  getOne(@Param('id') id: string) {
-    const book = this.booksService.getById(id);
+  async getOne(@Param('id') id: string) {
+    const book = await this.booksService.findById(id)
 
-    if (!book) throw new NotFoundException();
+    if (!book) throw new NotFoundException()
 
-    return book;
+    return book
   }
 
   @Post()
   create(@Body() createBookDto: ICreateBookDTO) {
-    return this.booksService.create(createBookDto);
+    return this.booksService.create(createBookDto)
   }
 
   @Put(':id')
-  edit(@Param('id') id: string, @Body() editBookDto: IEditBookDTO) {
-    const book = this.booksService.edit(id, editBookDto);
+  async update(@Param('id') id: string, @Body() updateBookDto: IUpdateBookDTO) {
+    const book = await this.booksService.update(id, updateBookDto)
 
-    if (!book) throw new NotFoundException();
+    if (!book) throw new NotFoundException()
 
-    return book;
+    return book
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    const book = this.booksService.remove(id);
+  async remove(@Param('id') id: string) {
+    const book = await this.booksService.remove(id)
 
-    if (!book) throw new NotFoundException();
+    if (!book) throw new NotFoundException()
 
-    return book;
+    return book
   }
 }

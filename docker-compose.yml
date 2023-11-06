@@ -1,0 +1,24 @@
+services:
+  mongoDb:
+    image: mongo
+    container_name: 'mongo'
+    restart: always
+    command: mongod --port ${MONGO_PORT}
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    ports:
+      - "${MONGO_PORT}:${MONGO_PORT}"
+  app:
+    build: ./
+    container_name: 'App'
+    working_dir: /app
+    volumes:
+      - ./uploads:/app/uploads
+    ports:
+      - "${HTTP_PORT}:${HTTP_PORT}"
+    environment:
+      - HTTP_PORT=${HTTP_PORT}
+      - MONGO_URL=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongoDb:${MONGO_PORT}
+    depends_on:
+      - mongoDb

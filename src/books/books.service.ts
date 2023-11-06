@@ -1,45 +1,37 @@
-import { Injectable } from '@nestjs/common';
-import { v4 as uuid } from 'uuid';
-import { IBook, ICreateBookDTO, IEditBookDTO, IBooksService } from './types';
+import { Model, Schema, isValidObjectId } from 'mongoose'
+import { InjectModel } from '@nestjs/mongoose'
+import { Injectable } from '@nestjs/common'
+import { Book } from './schemas/books.schema'
+import { ICreateBookDTO, IUpdateBookDTO } from './interfaces/dto'
 
 @Injectable()
-export class BooksService implements IBooksService {
-  private readonly books: IBook[];
+export class BooksService {
+  constructor(
+    @InjectModel(Book.name) private readonly bookModel: Model<Book>,
+  ) {}
 
-  constructor() {
-    this.books = [];
+  findAll(): Promise<Book[]> {
+    return this.bookModel.find().exec()
+  }
+  findById(id: string): Promise<Book | null> {
+    if (!isValidObjectId(id)) return Promise.resolve(null)
+
+    return this.bookModel.findById(id).exec()
   }
 
-  getAll(): IBook[] {
-    return this.books;
+  create(createBookDTO: ICreateBookDTO): Promise<Book> {
+    return this.bookModel.create(createBookDTO)
   }
-  getById(id: string): IBook | null {
-    const book = this.books.find((book) => book.id === id);
+  update(id: string, updateBookDTO: IUpdateBookDTO): Promise<Book | null> {
+    if (!isValidObjectId(id)) return Promise.resolve(null)
 
-    return book ?? null;
+    return this.bookModel
+      .findByIdAndUpdate(id, updateBookDTO, { returnDocument: 'after' })
+      .exec()
   }
+  remove(id: string): Promise<Book | null> {
+    if (!isValidObjectId(id)) return Promise.resolve(null)
 
-  create(book: ICreateBookDTO): IBook {
-    const createdBook = { ...book, id: uuid() };
-
-    this.books.push(createdBook);
-
-    return createdBook;
-  }
-  edit(id: string, book: IEditBookDTO): IBook | null {
-    const index = this.books.findIndex((book) => book.id === id);
-
-    if (index < 0) return null;
-
-    this.books[index] = { ...this.books[index], ...book };
-
-    return this.books[index];
-  }
-  remove(id: string): IBook | null {
-    const index = this.books.findIndex((book) => book.id === id);
-
-    if (index < 0) return null;
-
-    return this.books.splice(index, 1)[0];
+    return this.bookModel.findByIdAndDelete(id).exec()
   }
 }
