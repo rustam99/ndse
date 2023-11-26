@@ -21,3 +21,4 @@
 3. [«1.4. Перенос и интеграция JavaScript проекта на TypeScript»](https://github.com/rustam99/ndse/tree/hw-3.2)
 4. [«2.2. Погружение в Nest.js»](https://github.com/rustam99/ndse/tree/hw-3.3)
 5. [«2.3. Подключение базы данных к Nest.js: модуль для MongoDB»](https://github.com/rustam99/ndse/tree/hw-3.4)
+6. [«2.4. Потоки RxJS»](https://github.com/rustam99/ndse/tree/hw-3.5)
