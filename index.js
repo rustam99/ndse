@@ -1,7 +1,7 @@
 import { fromFetch } from 'rxjs/fetch'
 import { catchError, of, switchMap, filter, throwIfEmpty } from 'rxjs'
 
-const ownerNdseRepologin$ = fromFetch('https://api.github.com/search/repositories?q=ndse')
+const ownerNdseRepoLogin$ = fromFetch('https://api.github.com/search/repositories?q=ndse')
   .pipe(
     switchMap((response) => {
       if (!response.ok) {
@@ -25,7 +25,7 @@ const ownerNdseRepologin$ = fromFetch('https://api.github.com/search/repositorie
     })
   )
 
-ownerNdseRepologin$.subscribe({
+ownerNdseRepoLogin$.subscribe({
   next(value) {
     console.log(value)
   },
