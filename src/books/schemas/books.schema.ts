@@ -5,6 +5,8 @@ import { IBook } from '../interfaces/Book'
 export class Book implements IBook {
   @Prop({ required: true })
   name: string
+  @Prop({ required: true })
+  description: string
   @Prop([String])
   authors: string[]
 }
