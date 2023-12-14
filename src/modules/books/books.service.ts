@@ -1,4 +1,4 @@
-import { Model, Schema, isValidObjectId } from 'mongoose'
+import { Model, isValidObjectId } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { Injectable } from '@nestjs/common'
 import { Book } from './schemas/books.schema'

@@ -1,12 +1,10 @@
-FROM node:18.17.1-alpine
+FROM node:20.9.0-alpine3.18
 
 WORKDIR /app
 
-ARG NODE_ENV=production
-
 COPY ./package*.json ./
 
-RUN npm install
+RUN npm install && npm cache clean --force
 
 COPY . .
 

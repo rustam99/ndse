@@ -10,9 +10,9 @@ import {
 } from '@nestjs/common'
 import { BooksService } from './books.service'
 import { createBookSchema, updateBookSchema } from './validation/schemas'
-import { NotFoundException } from '../utils/Exceptions/NotFoundException'
+import { NotFoundException } from '../../utils/Exceptions/NotFoundException'
 import { ICreateBookDTO, IUpdateBookDTO } from './interfaces/dto'
-import { JoiValidationPipe } from '../pipes/joi.validation.pipe'
+import { JoiValidationPipe } from '../../pipes/joi.validation.pipe'
 
 @Controller('books')
 export class BooksController {
