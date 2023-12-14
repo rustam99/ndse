@@ -23,3 +23,4 @@
 5. [«2.3. Подключение базы данных к Nest.js: модуль для MongoDB»](https://github.com/rustam99/ndse/tree/hw-3.4)
 6. [«2.4. Потоки RxJS»](https://github.com/rustam99/ndse/tree/hw-3.5)
 7. [«2.5. Валидация и обработка ошибок. Interceptors, pipes»](https://github.com/rustam99/ndse/tree/hw-3.6)
+8. [«2.6. Аутентификация в NestJS, Passport.js, Guards»](https://github.com/rustam99/ndse/tree/hw-3.7)
