@@ -1,4 +1,4 @@
-import { Model, Schema, isValidObjectId } from 'mongoose'
+import { Model, isValidObjectId } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { Injectable } from '@nestjs/common'
 import { Book } from './schemas/books.schema'
@@ -10,26 +10,26 @@ export class BooksService {
     @InjectModel(Book.name) private readonly bookModel: Model<Book>,
   ) {}
 
-  findAll(): Promise<Book[]> {
+  findAll() {
     return this.bookModel.find().exec()
   }
-  findById(id: string): Promise<Book | null> {
-    if (!isValidObjectId(id)) return Promise.resolve(null)
+  async findById(id: string) {
+    if (!isValidObjectId(id)) return null
 
     return this.bookModel.findById(id).exec()
   }
 
-  create(createBookDTO: ICreateBookDTO): Promise<Book> {
+  create(createBookDTO: ICreateBookDTO) {
     return this.bookModel.create(createBookDTO)
   }
-  update(id: string, updateBookDTO: IUpdateBookDTO): Promise<Book | null> {
+  update(id: string, updateBookDTO: IUpdateBookDTO) {
     if (!isValidObjectId(id)) return Promise.resolve(null)
 
     return this.bookModel
       .findByIdAndUpdate(id, updateBookDTO, { returnDocument: 'after' })
       .exec()
   }
-  remove(id: string): Promise<Book | null> {
+  remove(id: string) {
     if (!isValidObjectId(id)) return Promise.resolve(null)
 
     return this.bookModel.findByIdAndDelete(id).exec()
