@@ -1,27 +1,73 @@
-## Домашние задания "NDSE Гилязев Рустам"
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+</p>
 
-### Первый модлуь
-1. [«1.2 Аргументы командной строки и console»](https://github.com/rustam99/ndse/tree/hw-1.2-1)
-2. [«1.4. Потоки. Модули: path, fs»](https://github.com/rustam99/ndse/tree/hw-1.4)
-3. [«1.5. Http module. Переменные окружения»](https://github.com/rustam99/ndse/tree/hw-1.5)
-4. [«2.1. Express»](https://github.com/rustam99/ndse/tree/hw-2.1)
-5. [«2.2. Middleware. Паттерн "цепочка обязанностей»](https://github.com/rustam99/ndse/tree/hw-2.2)
-6. [«2.3. EJS. Шаблонизаторы»](https://github.com/rustam99/ndse/tree/hw-2.3)
-7. [«2.4 Docker, установка и настройка»](https://github.com/rustam99/ndse/tree/hw-2.4)
-8. [«2.5. Docker: контейнеризация приложения»](https://github.com/rustam99/ndse/tree/hw-2.5)
-9. [«2.6. База данных и хранение данных»](https://github.com/rustam99/ndse/tree/hw-2.6)
-10. [«2.7. Подключение MongoDB в Node.js приложение»](https://github.com/rustam99/ndse/tree/hw-2.7)
-11. [«2.8. 2.8 Аутентификация. Passport.js»](https://github.com/rustam99/ndse/tree/hw-2.8)
-12. [«2.9. Realtime-взаимодействие с сервером, протокол websocket»](https://github.com/rustam99/ndse/tree/hw-2.9)
-13. [Курсовой проект «NDSE: настройка окружения и Express.js»](https://github.com/rustam99/ndse/tree/course-1)
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-### Второй модуль
-1. [«1.2. Система типов TypeScript. Принципы ООП. SOLID»](https://github.com/rustam99/ndse/tree/hw-3.0)
-2. [«1.3. IoС и DI. Библиотека reflect-metadata»](https://github.com/rustam99/ndse/tree/hw-3.1)
-3. [«1.4. Перенос и интеграция JavaScript проекта на TypeScript»](https://github.com/rustam99/ndse/tree/hw-3.2)
-4. [«2.2. Погружение в Nest.js»](https://github.com/rustam99/ndse/tree/hw-3.3)
-5. [«2.3. Подключение базы данных к Nest.js: модуль для MongoDB»](https://github.com/rustam99/ndse/tree/hw-3.4)
-6. [«2.4. Потоки RxJS»](https://github.com/rustam99/ndse/tree/hw-3.5)
-7. [«2.5. Валидация и обработка ошибок. Interceptors, pipes»](https://github.com/rustam99/ndse/tree/hw-3.6)
-8. [«2.6. Аутентификация в NestJS, Passport.js, Guards»](https://github.com/rustam99/ndse/tree/hw-3.7)
-9. [«2.7. Тестирование. Библиотека Jest»](https://github.com/rustam99/ndse/tree/hw-3.8)
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+
+## Description
+
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+
+## Installation
+
+```bash
+$ npm install
+```
+
+## Running the app
+
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
+```
+
+## Test
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
+
+## Support
+
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+
+## Stay in touch
+
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
+
+## License
+
+Nest is [MIT licensed](LICENSE).
