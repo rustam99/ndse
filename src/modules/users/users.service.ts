@@ -5,14 +5,15 @@ import { Model, isValidObjectId } from 'mongoose'
 import { randomBytes } from 'crypto'
 import { publicUser } from './utils/publicUser'
 import { hash } from './utils/hash'
-import { ErrorDictionary } from '../../utils/errorDictionary'
-import { UsersErrorDictionary } from './utils/usersErrorDictionary'
+import { errorDictionary } from '../../utils/errorDictionary'
+import { usersErrorDictionary } from './utils/usersErrorDictionary'
 import {
   IUserCreateDto,
   IUserPublic,
   IUserSearchParams,
   IUserService,
 } from './interfaces'
+import { regexStringFilter } from '../../utils/regexFilter'
 
 @Injectable()
 export class UsersService implements IUserService {
@@ -39,7 +40,7 @@ export class UsersService implements IUserService {
       return publicUser(user)
     } catch (error) {
       if (/duplicate key error/.test(error?.message)) {
-        return new Error(UsersErrorDictionary.emailIsBusy)
+        return new Error(usersErrorDictionary.emailIsBusy)
       }
 
       return error
@@ -49,7 +50,7 @@ export class UsersService implements IUserService {
   async findById(id: string): Promise<IUserPublic | null | Error> {
     try {
       if (!isValidObjectId(id))
-        return new Error(ErrorDictionary.invalidIdFormat)
+        return new Error(errorDictionary.invalidIdFormat())
 
       const user = await this.usersModel
         .findById(id)
@@ -80,14 +81,19 @@ export class UsersService implements IUserService {
   async findAll(params: IUserSearchParams): Promise<IUserPublic[]> {
     const filter = []
 
-    if (params.name)
-      filter.push({ name: { $regex: new RegExp(params.name, 'i') } })
-    if (params.email)
-      filter.push({ email: { $regex: new RegExp(params.email, 'i') } })
-    if (params.contactPhone)
+    if (params.name) {
+      filter.push({ name: regexStringFilter(params.name) })
+    }
+
+    if (params.email) {
+      filter.push({ email: regexStringFilter(params.email) })
+    }
+
+    if (params.contactPhone) {
       filter.push({
-        contactPhone: { $regex: new RegExp(params.contactPhone, 'i') },
+        contactPhone: regexStringFilter(params.contactPhone),
       })
+    }
 
     if (!params.limit) {
       return this.usersModel

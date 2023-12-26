@@ -1,3 +1,3 @@
-export const UsersErrorDictionary = {
+export const usersErrorDictionary = {
   emailIsBusy: 'Email занят',
 }

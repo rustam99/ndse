@@ -1,3 +1,7 @@
-export const ErrorDictionary = {
-  invalidIdFormat: 'Не верный формат id',
+export const errorDictionary = {
+  invalidIdFormat: (field?: string) => {
+    if (!field) return 'Не верный формат id'
+
+    return `Не верный формат "id" поля "${field}"`
+  },
 }
