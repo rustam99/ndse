@@ -12,9 +12,10 @@ import {
   ISupportRequestPublic,
   ISupportRequestService,
 } from './interfaces'
-import { IMessageMarkAsReadDto, IMessageSendDto } from './interfaces/dto'
+import { IMessageSendDto } from './interfaces/dto'
 import { IVoidOrNullOrError } from '../../types/utils'
 import { User } from '../users/schemas/users.schema'
+import { IUserRole } from '../users/interfaces'
 
 @Injectable()
 export class SupportRequestService implements ISupportRequestService {
@@ -36,7 +37,7 @@ export class SupportRequestService implements ISupportRequestService {
 
       if (params.user) filter.user = params.user
       if (typeof params.isActive !== 'undefined')
-        filter.$and.push({ isActive: params.isActive })
+        filter.isActive = params.isActive
 
       return this.supportRequestModel.find(filter)
     } catch (error) {
@@ -45,31 +46,41 @@ export class SupportRequestService implements ISupportRequestService {
   }
 
   async markMessagesAsRead(
-    params: IMessageMarkAsReadDto,
-    authorCondition: { author: Condition<Message['author']> },
+    supportRequest: string,
+    role: IUserRole,
   ): Promise<IVoidOrNullOrError> {
     try {
-      if (!isValidObjectId(params.supportRequest))
-        return new Error(errorDictionary.invalidIdFormat('supportRequest'))
-      if (!isValidObjectId(params.user))
-        return new Error(errorDictionary.invalidIdFormat('user'))
+      if (!isValidObjectId(supportRequest))
+        return new Error(errorDictionary.invalidIdFormat())
 
-      const supportRequest = await this.supportRequestModel
-        .findById(params.supportRequest)
-        .populate('messages')
+      const supportRequestDocument = await this.supportRequestModel
+        .findById(supportRequest)
+        .populate({
+          path: 'messages',
+          select: ['_id', 'author', 'readAt'],
+          match: { readAt: null },
+          populate: {
+            path: 'author',
+            select: ['_id', 'role'],
+            match: { role },
+          },
+        })
 
       if (!supportRequest) return null
 
+      const messagesIds = supportRequestDocument.messages
+        .filter((item) => item.author !== null)
+        .map((item: IMessagePublic) => item._id.toString())
+
       await this.messageModel.updateMany(
         {
-          id: {
-            $all: supportRequest.messages.map(
-              (item: IMessagePublic) => item._id,
-            ),
+          _id: {
+            $in: messagesIds,
           },
-          $and: [authorCondition],
         },
-        { readAt: Date.now() },
+        {
+          readAt: Date.now(),
+        },
       )
     } catch (error) {
       return error
@@ -84,15 +95,26 @@ export class SupportRequestService implements ISupportRequestService {
       if (!isValidObjectId(supportRequest))
         return new Error(errorDictionary.invalidIdFormat())
 
-      const unreadMessages = await this.messageModel
-        .find({ id: supportRequest, readAt: null })
-        .populate({
-          path: 'author',
-          match: { role },
-        })
+      const supportRequestDocument = await this.supportRequestModel
+        .findById(supportRequest)
+        .populate({ path: 'messages', select: ['_id', 'author'] })
 
-      // todo Проверить populate
-      return unreadMessages.length
+      if (!supportRequestDocument) return null
+
+      const messages = await this.messageModel
+        .find({
+          _id: {
+            $in: supportRequestDocument.messages.map((item: IMessagePublic) =>
+              item._id.toString(),
+            ),
+          },
+          readAt: null,
+        })
+        .populate({ path: 'author', match: role, select: ['_id', 'role'] })
+
+      if (!messages.length) return 0
+
+      return messages.filter((item) => item.author !== null).length
     } catch (error) {
       return error
     }

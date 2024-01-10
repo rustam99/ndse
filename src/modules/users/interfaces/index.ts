@@ -18,6 +18,10 @@ export interface IUserPublic extends Omit<IUser, IUserPrivateFields> {
   _id: IUserDocument['id']
 }
 
+export interface IUserPrivate extends IUser {
+  _id: IUserDocument['id']
+}
+
 export interface IUserSearchParams {
   limit?: number
   offset?: number
@@ -28,7 +32,7 @@ export interface IUserSearchParams {
 
 export interface IUserService {
   create(user: IUserCreateDto): Promise<IUserPublic | Error>
-  findById(id: string): Promise<IUserPublic | null | Error>
+  findById(id: string): Promise<IUserPublic | IUserPrivate | null | Error>
   findByEmail(email: string): Promise<IUserPublic | null | Error>
   findAll(params: IUserSearchParams): Promise<IUserPublic[]>
 }

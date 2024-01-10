@@ -1,13 +1,8 @@
 import { Condition, HydratedDocument } from 'mongoose'
-import { IUser } from '../../users/interfaces'
-import {
-  IMessageMarkAsReadDto,
-  IMessageSendDto,
-  ISupportRequestCreateDto,
-} from './dto'
+import { IUser, IUserRole } from '../../users/interfaces'
+import { IMessageSendDto, ISupportRequestCreateDto } from './dto'
 import { INumberOrNullOrError, IVoidOrNullOrError } from '../../../types/utils'
 import { User } from '../../users/schemas/users.schema'
-import { Message } from '../schemas/message.schema'
 
 export interface IMessage {
   author: IUser
@@ -46,8 +41,8 @@ export interface ISupportRequestService {
   sendMessage(data: IMessageSendDto): Promise<IMessagePublic | Error | null>
   getMessages(supportRequest: string): Promise<IMessagePublic[] | Error>
   markMessagesAsRead(
-    params: IMessageMarkAsReadDto,
-    author: { author: Condition<Message['author']> },
+    supportRequest: string,
+    role: Exclude<IUserRole, 'admin'>,
   ): Promise<IVoidOrNullOrError>
   getUnreadCount(
     supportRequest: string,
@@ -66,7 +61,7 @@ export interface ISupportRequestClientService {
     data: ISupportRequestCreateDto,
   ): Promise<ISupportRequestPublic | Error>
   markMessagesAsRead(
-    params: IMessageMarkAsReadDto,
+    supportRequest: string,
   ): ReturnType<ISupportRequestService['markMessagesAsRead']>
   getUnreadCount(
     supportRequest: string,
@@ -75,7 +70,7 @@ export interface ISupportRequestClientService {
 
 export interface ISupportRequestEmployeeService {
   markMessagesAsRead(
-    params: IMessageMarkAsReadDto,
+    supportRequest: string,
   ): ReturnType<ISupportRequestService['markMessagesAsRead']>
   getUnreadCount(
     supportRequest: string,

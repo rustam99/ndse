@@ -9,6 +9,7 @@ import { errorDictionary } from '../../utils/errorDictionary'
 import { usersErrorDictionary } from './utils/usersErrorDictionary'
 import {
   IUserCreateDto,
+  IUserPrivate,
   IUserPublic,
   IUserSearchParams,
   IUserService,
@@ -64,11 +65,9 @@ export class UsersService implements IUserService {
     }
   }
 
-  async findByEmail(email: string): Promise<IUserPublic | null | Error> {
+  async findByEmail(email: string): Promise<IUserPrivate | null | Error> {
     try {
-      const user = await this.usersModel
-        .findOne({ email })
-        .select(this.hideSelectPrivateFields())
+      const user = await this.usersModel.findOne({ email })
 
       if (!user) return null
 

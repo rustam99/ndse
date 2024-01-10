@@ -3,7 +3,6 @@ import {
   ISupportRequestEmployeeService,
   ISupportRequestService,
 } from './interfaces'
-import { IMessageMarkAsReadDto } from './interfaces/dto'
 import { Error, isValidObjectId, Model } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { SupportRequest } from './schemas/supportRequest.schema'
@@ -38,11 +37,9 @@ export class SupportRequestEmployeeService
   }
 
   async markMessagesAsRead(
-    params: IMessageMarkAsReadDto,
+    supportRequest: string,
   ): ReturnType<ISupportRequestService['markMessagesAsRead']> {
-    return this.supportRequest.markMessagesAsRead(params, {
-      author: params.user,
-    })
+    return this.supportRequest.markMessagesAsRead(supportRequest, 'client')
   }
 
   async getUnreadCount(
