@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Reservation } from './schemas/reservation.schema'
-import { Error, FilterQuery, isValidObjectId, Model } from 'mongoose'
+import { FilterQuery, isValidObjectId, Model } from 'mongoose'
 import {
-  IReservationCreateDto,
   IReservationPublic,
   IReservationSearchOptions,
   IReservationService,
 } from './interfaces'
 import { errorDictionary } from '../../utils/errorDictionary'
 import { reservationErrorDictionary } from './utils/reservationErrorDictionary'
+import { IReservationCreateProps } from './interfaces/dto'
 
 @Injectable()
 export class ReservationService implements IReservationService {
@@ -18,18 +18,16 @@ export class ReservationService implements IReservationService {
   ) {}
 
   async addReservation(
-    reservation: IReservationCreateDto,
-  ): Promise<IReservationPublic | Error> {
+    reservation: IReservationCreateProps,
+  ): Promise<IReservationPublic | Error | null> {
     try {
       if (!isValidObjectId(reservation.userId))
         return new Error(errorDictionary.invalidIdFormat('userId'))
-      if (!isValidObjectId(reservation.hotelId))
-        return new Error(errorDictionary.invalidIdFormat('hotelId'))
-      if (!isValidObjectId(reservation.roomId))
+      if (!isValidObjectId(reservation.hotelRoom))
         return new Error(errorDictionary.invalidIdFormat('roomId'))
 
       const isReservationExist = await this.reservationModel.findOne({
-        roomId: reservation.roomId,
+        roomId: reservation.hotelRoom,
         $or: [
           {
             $and: [
@@ -50,9 +48,20 @@ export class ReservationService implements IReservationService {
         return new Error(reservationErrorDictionary.roomIsBusy)
       }
 
-      return await this.reservationModel.create(reservation)
+      const createdReservation = await this.reservationModel.create({
+        dateStart: reservation.dateStart,
+        dateEnd: reservation.dateEnd,
+        userId: reservation.userId,
+        roomId: reservation.hotelRoom,
+        hotelId: reservation.hotelId,
+      })
+
+      return this.reservationModel
+        .findById(createdReservation.id)
+        .populate({ path: 'hotelId', select: ['title', 'description'] })
+        .populate({ path: 'roomId', select: ['description', 'images'] })
     } catch (error) {
-      return error
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -63,41 +72,43 @@ export class ReservationService implements IReservationService {
 
       await this.reservationModel.findByIdAndDelete(id)
     } catch (error) {
-      return error
+      throw new InternalServerErrorException(error)
     }
   }
 
   async getReservations(
     params: IReservationSearchOptions,
   ): Promise<IReservationPublic[] | Error> {
-    const filter: FilterQuery<Reservation> = {
-      $or: [],
-    }
+    try {
+      const filter: FilterQuery<Reservation> = {}
 
-    if (params.userId) {
-      if (!isValidObjectId(params.userId)) {
-        return new Error(errorDictionary.invalidIdFormat('userId'))
+      if (params.userId) {
+        if (!isValidObjectId(params.userId)) {
+          return new Error(errorDictionary.invalidIdFormat('userId'))
+        }
+
+        filter.userId = params.userId
       }
 
-      filter.$or.push({ userId: params.userId })
-    }
+      if (params.roomId) {
+        if (!isValidObjectId(params.roomId)) {
+          return new Error(errorDictionary.invalidIdFormat('roomId'))
+        }
 
-    if (params.roomId) {
-      if (!isValidObjectId(params.roomId)) {
-        return new Error(errorDictionary.invalidIdFormat('roomId'))
+        filter.roomId = params.roomId
       }
 
-      filter.$or.push({ roomId: params.roomId })
-    }
+      if (params.dateStart) {
+        filter.dateStart = params.dateStart
+      }
 
-    if (params.dateStart) {
-      filter.$or.push({ dateStart: params.dateStart })
-    }
+      if (params.dateEnd) {
+        filter.dateEnd = params.dateEnd
+      }
 
-    if (params.dateEnd) {
-      filter.$or.push({ dateEnd: params.dateEnd })
+      return this.reservationModel.find(filter)
+    } catch (error) {
+      throw new InternalServerErrorException(error)
     }
-
-    return this.reservationModel.find(filter)
   }
 }

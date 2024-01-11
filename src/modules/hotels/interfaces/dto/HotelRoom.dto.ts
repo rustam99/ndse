@@ -5,10 +5,9 @@ export interface IHotelRoomCreateDto
     IHotelRoom,
     'hotel' | 'createdAt' | 'updatedAt' | 'description' | 'images' | 'isEnabled'
   > {
-  hotel: string
+  hotelId: string
   description?: IHotelRoom['description']
   images?: IHotelRoom['images']
-  isEnabled?: IHotelRoom['isEnabled']
 }
 
 export interface IHotelRoomUpdateDto

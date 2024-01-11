@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { User } from './schemas/users.schema'
-import { Model, isValidObjectId } from 'mongoose'
+import { Model, isValidObjectId, FilterQuery } from 'mongoose'
 import { randomBytes } from 'crypto'
 import { publicUser } from './utils/publicUser'
 import { hash } from './utils/hash'
@@ -15,19 +15,24 @@ import {
   IUserService,
 } from './interfaces'
 import { regexStringFilter } from '../../utils/regexFilter'
+import { usersRoles } from './utils/usersRoles'
 
 @Injectable()
 export class UsersService implements IUserService {
   constructor(@InjectModel(User.name) private usersModel: Model<User>) {}
 
   private hideSelectPrivateFields() {
-    return '-passwordHash -passwordSalt'
+    return '-passwordHash -passwordSalt -role'
   }
 
   async create(userDto: IUserCreateDto): Promise<IUserPublic | Error> {
     try {
       const salt = randomBytes(16)
       const hashedPassword = await hash(userDto.password, salt)
+
+      if (userDto.role && !(userDto.role in usersRoles)) {
+        return new Error(usersErrorDictionary.incorrectRole)
+      }
 
       const user = await this.usersModel.create({
         email: userDto.email,
@@ -44,7 +49,7 @@ export class UsersService implements IUserService {
         return new Error(usersErrorDictionary.emailIsBusy)
       }
 
-      return error
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -61,7 +66,7 @@ export class UsersService implements IUserService {
 
       return user
     } catch (error) {
-      return error
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -73,42 +78,39 @@ export class UsersService implements IUserService {
 
       return user
     } catch (error) {
-      return error
+      throw new InternalServerErrorException(error)
     }
   }
 
   async findAll(params: IUserSearchParams): Promise<IUserPublic[]> {
-    const filter = []
+    try {
+      const filter: FilterQuery<User> = {}
+      if (params.name) {
+        filter.name = regexStringFilter(params.name)
+      }
 
-    if (params.name) {
-      filter.push({ name: regexStringFilter(params.name) })
-    }
+      if (params.email) {
+        filter.email = regexStringFilter(params.email)
+      }
 
-    if (params.email) {
-      filter.push({ email: regexStringFilter(params.email) })
-    }
+      if (params.contactPhone) {
+        filter.contactPhone = regexStringFilter(params.contactPhone)
+      }
 
-    if (params.contactPhone) {
-      filter.push({
-        contactPhone: regexStringFilter(params.contactPhone),
-      })
-    }
+      if (!params.limit) {
+        return this.usersModel
+          .find(filter)
+          .select(this.hideSelectPrivateFields())
+          .skip(params.offset ?? 0)
+      }
 
-    if (!params.limit) {
       return this.usersModel
-        .find({
-          $or: filter,
-        })
+        .find(filter)
         .select(this.hideSelectPrivateFields())
         .skip(params.offset ?? 0)
+        .limit(params.limit)
+    } catch (error) {
+      throw new InternalServerErrorException(error)
     }
-
-    return this.usersModel
-      .find({
-        $or: filter,
-      })
-      .select(this.hideSelectPrivateFields())
-      .skip(params.offset ?? 0)
-      .limit(params.limit)
   }
 }

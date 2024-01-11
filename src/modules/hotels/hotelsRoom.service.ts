@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import {
   IHotelRoomPublic,
   IHotelRoomSearchParams,
   IHotelRoomService,
-} from './interfaces/HotelRoom'
+  IHotelRoomCreateDto,
+  IHotelRoomUpdateDto,
+} from './interfaces'
 import { InjectModel } from '@nestjs/mongoose'
 import { HotelRoom } from './schemas/hotelRoom.schema'
 import { FilterQuery, isValidObjectId, Model } from 'mongoose'
-import { IHotelRoomCreateDto, IHotelRoomUpdateDto } from './interfaces'
 import { errorDictionary } from '../../utils/errorDictionary'
-import { regexStringFilter } from '../../utils/regexFilter'
 
 @Injectable()
 export class HotelsRoomService implements IHotelRoomService {
@@ -19,13 +19,21 @@ export class HotelsRoomService implements IHotelRoomService {
 
   async create(room: IHotelRoomCreateDto): Promise<IHotelRoomPublic | Error> {
     try {
-      if (!isValidObjectId(room.hotel)) {
+      if (!isValidObjectId(room.hotelId)) {
         return new Error(errorDictionary.invalidIdFormat('hotel'))
       }
 
-      return await this.hotelRoomModel.create(room)
+      const createdRoom = await this.hotelRoomModel.create({
+        ...room,
+        hotel: room.hotelId,
+      })
+
+      return this.hotelRoomModel
+        .findById(createdRoom.id)
+        .select('-createdAt -updatedAt')
+        .populate({ path: 'hotel', select: ['id', 'title', 'description'] })
     } catch (error) {
-      return error
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -38,19 +46,18 @@ export class HotelsRoomService implements IHotelRoomService {
         return new Error(errorDictionary.invalidIdFormat())
       }
 
-      const updatedHotelRoom = await this.hotelRoomModel.findByIdAndUpdate(
-        id,
-        room,
-        {
+      const updatedHotelRoom = await this.hotelRoomModel
+        .findByIdAndUpdate(id, room, {
           new: true,
-        },
-      )
+        })
+        .select('-createdAt -updatedAt')
+        .populate({ path: 'hotel', select: ['id', 'title', 'description'] })
 
       if (!updatedHotelRoom) return null
 
       return updatedHotelRoom
     } catch (error) {
-      return error
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -60,46 +67,53 @@ export class HotelsRoomService implements IHotelRoomService {
         return new Error(errorDictionary.invalidIdFormat())
       }
 
-      const hotelRoom = await this.hotelRoomModel.findById(id)
+      const hotelRoom = await this.hotelRoomModel
+        .findById(id)
+        .select('-createdAt -updatedAt')
+        .populate({ path: 'hotel', select: ['id', 'title', 'description'] })
 
       if (!hotelRoom) return null
 
       return hotelRoom
     } catch (error) {
-      return error
+      throw new InternalServerErrorException(error)
     }
   }
 
   async search(
     params: IHotelRoomSearchParams,
   ): Promise<IHotelRoomPublic[] | Error> {
-    const filter: FilterQuery<HotelRoom> = {
-      $or: [],
-    }
+    try {
+      const filter: FilterQuery<HotelRoom> = {}
 
-    if (typeof params.isEnabled !== 'undefined') {
-      filter.$and = [{ isEnabled: params.isEnabled }]
-    }
-
-    if (params.hotel) {
-      if (!isValidObjectId(params.hotel)) {
-        return new Error(errorDictionary.invalidIdFormat('hotel'))
+      if (typeof params.isEnabled !== 'undefined') {
+        filter.isEnabled = params.isEnabled
       }
 
-      filter.$or.push({ hotel: params.hotel })
-    }
+      if (params.hotel) {
+        if (!isValidObjectId(params.hotel)) {
+          return new Error(errorDictionary.invalidIdFormat('hotel'))
+        }
 
-    if (params.description) {
-      filter.$or.push({ description: regexStringFilter(filter.description) })
-    }
+        filter.hotel = params.hotel
+      }
 
-    if (!params.limit) {
-      return this.hotelRoomModel.find(filter).skip(params.offset ?? 0)
-    }
+      if (!params.limit) {
+        return this.hotelRoomModel
+          .find(filter)
+          .select('-createdAt -updatedAt -isEnabled')
+          .populate({ path: 'hotel', select: ['id', 'title'] })
+          .skip(params.offset ?? 0)
+      }
 
-    return this.hotelRoomModel
-      .find(filter)
-      .skip(params.offset ?? 0)
-      .limit(params.limit)
+      return this.hotelRoomModel
+        .find(filter)
+        .select('-createdAt -updatedAt -isEnabled')
+        .populate({ path: 'hotel', select: ['id', 'title'] })
+        .skip(params.offset ?? 0)
+        .limit(params.limit)
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
   }
 }

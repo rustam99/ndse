@@ -4,10 +4,12 @@ import { HotelsService } from './hotels.service'
 import { HotelsRoomService } from './hotelsRoom.service'
 import { Hotel, HotelSchema } from './schemas/hotel.schema'
 import { HotelRoom, HotelRoomSchema } from './schemas/hotelRoom.schema'
-import { HotelsController } from './hotels.controller'
+import { HotelsRoomController } from './hotelsRoom.controller'
 import { MulterModule } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
 import { uploadFileName } from '../../utils/uploadFileName'
+import { HotelsRoomRoleController } from './hotelRoomRole.controller'
+import { HotelsController } from './hotels.controller'
 
 @Module({
   imports: [
@@ -25,7 +27,11 @@ import { uploadFileName } from '../../utils/uploadFileName'
     }),
   ],
   providers: [HotelsService, HotelsRoomService],
-  controllers: [HotelsController],
+  controllers: [
+    HotelsController,
+    HotelsRoomRoleController,
+    HotelsRoomController,
+  ],
   exports: [HotelsService, HotelsRoomService],
 })
 export class HotelsModule {}

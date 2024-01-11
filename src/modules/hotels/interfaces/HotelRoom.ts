@@ -11,17 +11,16 @@ export interface IHotelRoom {
   isEnabled: boolean
 }
 
-export type IHotelDocument = HydratedDocument<HotelRoom>
+export type IHotelRoomDocument = HydratedDocument<HotelRoom>
 
 export interface IHotelRoomPublic extends IHotelRoom {
-  _id: IHotelDocument['id']
+  _id: IHotelRoomDocument['id']
 }
 
 export interface IHotelRoomSearchParams {
   limit?: number
   offset?: number
   hotel?: string
-  description?: string
   isEnabled?: boolean
 }
 

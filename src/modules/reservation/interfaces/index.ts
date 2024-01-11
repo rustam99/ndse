@@ -1,7 +1,8 @@
-import { IReservationCreateDto } from './dto'
+import { IReservationCreateDto, IReservationCreateProps } from './dto'
 import { IUser } from '../../users/interfaces'
 import { IHotel, IHotelRoom } from '../../hotels/interfaces'
-import { IHotelDocument } from '../../hotels/interfaces/HotelRoom'
+import { HydratedDocument } from 'mongoose'
+import { Reservation } from '../schemas/reservation.schema'
 
 export interface IReservation {
   userId: IUser
@@ -11,8 +12,10 @@ export interface IReservation {
   dateEnd: Date
 }
 
+export type IReservationDocument = HydratedDocument<Reservation>
+
 export interface IReservationPublic extends IReservation {
-  _id: IHotelDocument['id']
+  _id: IReservationDocument['id']
 }
 
 export interface IReservationSearchOptions {
@@ -24,8 +27,8 @@ export interface IReservationSearchOptions {
 
 export interface IReservationService {
   addReservation(
-    reservation: IReservationCreateDto,
-  ): Promise<IReservationPublic | Error>
+    reservation: IReservationCreateProps,
+  ): Promise<IReservationPublic | Error | null>
   removeReservation(id: string): Promise<Error | void>
   getReservations(
     params: IReservationSearchOptions,

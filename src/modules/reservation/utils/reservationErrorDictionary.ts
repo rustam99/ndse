@@ -1,3 +1,3 @@
 export const reservationErrorDictionary = {
-  roomIsBusy: 'На данную дату номр занят',
+  roomIsBusy: 'На данную дату номер занят',
 }

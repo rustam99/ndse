@@ -19,7 +19,6 @@ export interface IHotelSearchParams {
   limit?: number
   offset?: number
   title?: IHotel['title']
-  description?: IHotel['description']
 }
 
 export interface IHotelService {

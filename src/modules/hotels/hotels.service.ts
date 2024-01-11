@@ -1,13 +1,14 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import {
   IHotelPublic,
   IHotelSearchParams,
   IHotelService,
-} from './interfaces/Hotel'
+  IHotelCreateDto,
+  IHotelUpdateDto,
+} from './interfaces'
 import { InjectModel } from '@nestjs/mongoose'
 import { Hotel } from './schemas/hotel.schema'
-import { isValidObjectId, Model } from 'mongoose'
-import { IHotelCreateDto, IHotelUpdateDto } from './interfaces'
+import { FilterQuery, isValidObjectId, Model } from 'mongoose'
 import { hotelsErrorDictionary } from './utils/hotelsErrorDictionary'
 import { errorDictionary } from '../../utils/errorDictionary'
 import { regexStringFilter } from '../../utils/regexFilter'
@@ -24,7 +25,7 @@ export class HotelsService implements IHotelService {
         return new Error(hotelsErrorDictionary.hotelNameIsBusy)
       }
 
-      return error
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -33,6 +34,9 @@ export class HotelsService implements IHotelService {
     hotel: IHotelUpdateDto,
   ): Promise<IHotelPublic | Error | null> {
     try {
+      console.log(id)
+      console.log(hotel)
+
       if (!isValidObjectId(id)) {
         return new Error(errorDictionary.invalidIdFormat())
       }
@@ -45,7 +49,7 @@ export class HotelsService implements IHotelService {
 
       return updatedHotel
     } catch (error) {
-      return error
+      throw new InternalServerErrorException(error)
     }
   }
 
@@ -61,36 +65,32 @@ export class HotelsService implements IHotelService {
 
       return hotel
     } catch (error) {
-      return error
+      throw new InternalServerErrorException(error)
     }
   }
 
   async search(params: IHotelSearchParams): Promise<IHotelPublic[]> {
-    const filter = []
+    try {
+      const filter: FilterQuery<Hotel> = {}
 
-    if (params.title) {
-      filter.push({ title: regexStringFilter(params.title) })
-    }
+      if (params.title) {
+        filter.title = regexStringFilter(params.title)
+      }
 
-    if (params.description) {
-      filter.push({
-        description: regexStringFilter(params.description),
-      })
-    }
+      if (!params.limit) {
+        return this.hotelModel
+          .find(filter)
+          .select(['id', 'title', 'description'])
+          .skip(params.offset ?? 0)
+      }
 
-    if (!params.limit) {
       return this.hotelModel
-        .find({
-          $or: filter,
-        })
+        .find(filter)
+        .select(['id', 'title', 'description'])
         .skip(params.offset ?? 0)
+        .limit(params.limit)
+    } catch (error) {
+      throw new InternalServerErrorException(error)
     }
-
-    return this.hotelModel
-      .find({
-        $or: filter,
-      })
-      .skip(params.offset ?? 0)
-      .limit(params.limit)
   }
 }
