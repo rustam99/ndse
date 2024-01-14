@@ -29,10 +29,11 @@ export interface IReservationService {
   addReservation(
     reservation: IReservationCreateProps,
   ): Promise<IReservationPublic | Error | null>
-  removeReservation(id: string): Promise<Error | void>
+  removeReservation(id: string): Promise<Error | void | null>
   getReservations(
     params: IReservationSearchOptions,
   ): Promise<IReservationPublic[] | Error>
+  getById(id: string): Promise<IReservationPublic | Error | null>
 }
 
 export { IReservationCreateDto }

@@ -11,6 +11,7 @@ import { SupportRequestService } from './supportRequest.service'
 import { IVoidOrNullOrError } from '../../types/utils'
 import { usersRoles } from '../users/utils/usersRoles'
 import { errorDictionary } from '../../utils/errorDictionary'
+import { ISupportRequestMarkMessagesAsReadDto } from './interfaces/dto'
 
 @Injectable()
 export class SupportRequestEmployeeService
@@ -37,9 +38,12 @@ export class SupportRequestEmployeeService
   }
 
   async markMessagesAsRead(
-    supportRequest: string,
+    params: Omit<ISupportRequestMarkMessagesAsReadDto, 'role'>,
   ): ReturnType<ISupportRequestService['markMessagesAsRead']> {
-    return this.supportRequest.markMessagesAsRead(supportRequest, 'client')
+    return this.supportRequest.markMessagesAsRead({
+      ...params,
+      role: usersRoles.client,
+    })
   }
 
   async getUnreadCount(

@@ -4,7 +4,10 @@ import {
   ISupportRequestPublic,
   ISupportRequestService,
 } from './interfaces'
-import { ISupportRequestCreateDto } from './interfaces/dto'
+import {
+  ISupportRequestCreateDto,
+  ISupportRequestMarkMessagesAsReadDto,
+} from './interfaces/dto'
 import { Error, isValidObjectId, Model } from 'mongoose'
 import { errorDictionary } from '../../utils/errorDictionary'
 import { InjectModel } from '@nestjs/mongoose'
@@ -52,9 +55,12 @@ export class SupportRequestClientService
   }
 
   async markMessagesAsRead(
-    supportRequest: string,
+    params: Omit<ISupportRequestMarkMessagesAsReadDto, 'role'>,
   ): ReturnType<ISupportRequestService['markMessagesAsRead']> {
-    return this.supportRequest.markMessagesAsRead(supportRequest, 'manager')
+    return this.supportRequest.markMessagesAsRead({
+      ...params,
+      role: usersRoles.manager,
+    })
   }
 
   async getUnreadCount(

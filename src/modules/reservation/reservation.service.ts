@@ -65,12 +65,26 @@ export class ReservationService implements IReservationService {
     }
   }
 
-  async removeReservation(id: string): Promise<Error | void> {
+  async removeReservation(id: string): Promise<Error | void | null> {
     try {
       if (!isValidObjectId(id))
         return new Error(errorDictionary.invalidIdFormat())
 
-      await this.reservationModel.findByIdAndDelete(id)
+      const removedReservation =
+        await this.reservationModel.findByIdAndDelete(id)
+
+      if (!removedReservation) return null
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
+  }
+
+  async getById(id: string): Promise<IReservationPublic | Error | null> {
+    try {
+      if (!isValidObjectId(id))
+        return new Error(errorDictionary.invalidIdFormat())
+
+      return this.reservationModel.findById(id)
     } catch (error) {
       throw new InternalServerErrorException(error)
     }
@@ -106,7 +120,10 @@ export class ReservationService implements IReservationService {
         filter.dateEnd = params.dateEnd
       }
 
-      return this.reservationModel.find(filter)
+      return this.reservationModel
+        .find(filter)
+        .populate({ path: 'hotelId', select: ['title', 'description'] })
+        .populate({ path: 'roomId', select: ['description', 'images'] })
     } catch (error) {
       throw new InternalServerErrorException(error)
     }

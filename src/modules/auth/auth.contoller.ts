@@ -3,11 +3,10 @@ import {
   UseGuards,
   Post,
   Request,
-  Response,
+  HttpCode,
   HttpStatus,
 } from '@nestjs/common'
 import { LocalAuthGuard } from './guards/local-auth.guard'
-import { Response as ExpressResponse } from 'express'
 
 @Controller('auth')
 export class AuthController {
@@ -22,9 +21,8 @@ export class AuthController {
   }
 
   @Post('logout')
-  async logout(@Request() request, @Response() response: ExpressResponse) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async logout(@Request() request) {
     request.session.destroy()
-
-    response.status(HttpStatus.NO_CONTENT).send()
   }
 }

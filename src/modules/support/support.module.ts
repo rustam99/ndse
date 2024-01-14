@@ -8,6 +8,8 @@ import { Message, MessageSchema } from './schemas/message.schema'
 import { SupportRequestService } from './supportRequest.service'
 import { SupportRequestClientService } from './supportRequestClient.service'
 import { SupportRequestEmployeeService } from './supportRequestEmployee.service'
+import { SupportRoleController } from './supportRole.controller'
+import { SupportController } from './support.controller'
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { SupportRequestEmployeeService } from './supportRequestEmployee.service'
     SupportRequestClientService,
     SupportRequestEmployeeService,
   ],
+  controllers: [SupportRoleController, SupportController],
   exports: [
     SupportRequestService,
     SupportRequestClientService,
