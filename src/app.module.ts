@@ -6,6 +6,7 @@ import { ReservationModule } from './modules/reservation/reservation.module'
 import { SupportModule } from './modules/support/support.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { Config } from './config'
+import { AppGateway } from './app.gateway'
 
 @Module({
   imports: [
@@ -16,5 +17,6 @@ import { Config } from './config'
     SupportModule,
     AuthModule,
   ],
+  providers: [AppGateway],
 })
 export class AppModule {}

@@ -34,9 +34,6 @@ export class HotelsService implements IHotelService {
     hotel: IHotelUpdateDto,
   ): Promise<IHotelPublic | Error | null> {
     try {
-      console.log(id)
-      console.log(hotel)
-
       if (!isValidObjectId(id)) {
         return new Error(errorDictionary.invalidIdFormat())
       }
