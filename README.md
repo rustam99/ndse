@@ -25,3 +25,6 @@
 7. [«2.5. Валидация и обработка ошибок. Interceptors, pipes»](https://github.com/rustam99/ndse/tree/hw-3.6)
 8. [«2.6. Аутентификация в NestJS, Passport.js, Guards»](https://github.com/rustam99/ndse/tree/hw-3.7)
 9. [«2.7. Тестирование. Библиотека Jest»](https://github.com/rustam99/ndse/tree/hw-3.8)
+
+### Диплом
+[«Cайт-агрегатор»](https://github.com/rustam99/ndse/tree/diplom)
